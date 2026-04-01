@@ -29,14 +29,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Cache CMake build
-        uses: actions/cache@v5
-        with:
-          path: build/${{ matrix.preset }}
-          key: ${{ runner.os }}-${{ matrix.preset }}-${{ hashFiles('**/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.preset }}-
-
       - name: Setup MSVC
         if: matrix.os == 'windows-latest' && matrix.preset == 'windows-msvc'
         uses: ilammy/msvc-dev-cmd@v1
