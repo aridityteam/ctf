@@ -56,4 +56,4 @@ jobs:
         run: cmake --preset ${{ matrix.preset }} -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build --preset build --config Release --parallel
+        run: cmake --build --preset build/${{ matrix.preset }} --config Release --parallel
