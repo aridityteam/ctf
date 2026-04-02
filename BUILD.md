@@ -1,6 +1,6 @@
 # HOW TO BUILD CTF (April 1, 2026 04/01/2026)
 
-Welcome! This text file teaches you on how to build Cereon Template Framework
+Welcome! This Markdown file teaches you on how to build Cereon Template Framework
 using it's preferred build system! (CMake)
 
 ## Prerequisites
@@ -16,8 +16,11 @@ Here are the prerequisites that you need before building Cereon Template Framewo
 Once you have installed the following requirements listed above, we will fire up the terminal.
 
 If your a first time programmer, make sure to follow the following requirements below:
+
 [ * ] I promise that I will not be amazed that I can open a terminal.
+
 [ * ] I promise that I will not say "I'm a cool hacker man" after opening the terminal.
+
 [ * ] I promise that I will not complain when the tutorial is missing some stuff that I needed to do but didn't know how.
 
 Anyways, once you have launched your terminal, we will type some commands to generate projects
@@ -29,9 +32,9 @@ command-line interface.
 
 ### 1. Generate projects
 
-Time to generate our projects! To generate them, you can type in "cmake -B build -S ." into your terminal.
-On Linux, you can configure it so that it builds the output in the Release configuratin by typing
-"cmake -B build -S. -DCMAKE\_BUILD\_TYPE=Release" in the terminal.
+Time to generate our projects! To generate them, you can type in `cmake -B build -S .` into your terminal.
+
+On Linux, you can configure it so that it builds the output in the Release configuration by typing `cmake -B build -S. -DCMAKE_BUILD_TYPE=Release` in the terminal.
 
 ### 2. Build Build Build
 
@@ -45,9 +48,10 @@ On Linux:
 You can simply build the project by typing this: "cmake --build build --parallel"
 
 ### 3. Getting the output
+
 The project is configured to place the project's output in where the project build files are placed.
+
 In this case, we made it so that project build files are placed on a folder called "build".
-You can get the build output on "build/Bin". If your on Windows, make sure to get the "build/Lib" folder
-as well. Make sure to copy the header (include) files in "Source/CTF/ctf" as well and KEEP the directory
-structure.
+
+You can get the build output on "build/Bin". If your on Windows, make sure to get the "build/Lib" folder as well. Make sure to copy the header (include) files in "Source/CTF/ctf" as well and KEEP the directory structure.
 
