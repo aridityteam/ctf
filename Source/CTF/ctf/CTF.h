@@ -22,6 +22,8 @@
 #define CTF_H
 #pragma once
 
+#include <cstddef>
+#include <cwchar>
 #include <cstdlib>
 
 #ifndef CTF_API
@@ -53,11 +55,12 @@
 #endif
 
 namespace CTF {
+	using size_t = std::size_t;
+	using wint_t = std::wint_t;
+
 
     //===============================================================================
     // String manipulation utils
-
-    typedef unsigned long size_t;
 
     CTF_API char *A_strcpy(char* dest, const char* src);
     CTF_API char *A_strncpy(char* dest, const char* src, size_t count);
@@ -110,7 +113,6 @@ namespace CTF {
 
     //===============================================================================
     // WString manipulation utils
-	typedef unsigned short wint_t;
 
     CTF_API wchar_t* A_wcscpy(wchar_t* dest, const wchar_t* src);
     CTF_API wchar_t* A_wcsncpy(wchar_t* dest, const wchar_t* src, size_t n);
@@ -260,10 +262,5 @@ namespace CTF {
 #define Q_wmemset     ::wmemset
 #define Q_wmemcmp     ::wmemcmp
 #endif // USE_CTF_STRING_UTILS
-
-namespace CTF {
-	typedef unsigned long size_t;
-	typedef unsigned short wint_t;
-}
 
 #endif // !CTF_H
