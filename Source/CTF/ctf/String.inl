@@ -174,7 +174,7 @@ bool CTF::BasicString<T>::empty() const {
 }
 
 template<typename T>
-CTF::size_t CTF::BasicString<T>::capacity() const {
+size_t CTF::BasicString<T>::capacity() const {
     return capacity_;
 }
 
