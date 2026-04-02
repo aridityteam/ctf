@@ -24,6 +24,7 @@
 
 #include <cstddef>
 #include <cwchar>
+#include <cstring>
 #include <cstdlib>
 
 #ifndef CTF_API
