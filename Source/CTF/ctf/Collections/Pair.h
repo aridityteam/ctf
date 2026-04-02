@@ -22,7 +22,6 @@
 #define PAIR_H
 #pragma once
 
-
 #include <utility>
 
 namespace CTF::Collections {
