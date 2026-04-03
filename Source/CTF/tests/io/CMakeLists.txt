@@ -10,6 +10,8 @@ set(CTF_INC_DIRS ${SRC_DIR}/CTF/ctf)
 
 set(SOURCES
 	"main.cpp"
+	"ostringstreamtest.cpp"
+	"pipestreamtest.cpp"
 )
 
 if(MSVC)
@@ -34,12 +36,19 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CTF_INC_DIRS}
+	${THIRDPARTY_DIR}/googletest/googletest/include
 )
 
 add_dependencies(${PROJECT_NAME}
 	CTF
+	gtest
+	gtest_main
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE CTF)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	gtest
+	gtest_main
+)
 
 add_test(
 	NAME CTF_IO_Test

@@ -10,6 +10,8 @@ set(CTF_INC_DIRS ${SRC_DIR}/CTF/ctf)
 
 set(SOURCES
 	"main.cpp"
+	"jsontest.cpp"
+	"jsonrpctest.cpp"
 )
 
 if(MSVC)
@@ -39,8 +41,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 add_dependencies(${PROJECT_NAME}
 	CTF
+	gtest
+	gtest_main
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE CTF)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	gtest
+	gtest_main
+)
 
 add_test(
 	NAME CTF_JSON_Test

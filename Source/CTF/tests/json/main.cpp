@@ -18,38 +18,9 @@
  * along with Cereon Template Framework. If not, see <https://www.gnu.org/licenses/>. 
  */
 
-#include <IOStream.h>
-#include <OStringStream.h>
-#include <BasicString.h>
+#include <gtest/gtest.h>
 
-#include <Json/Json.h>
-#include <Json/JsonParser.h>
-#include <Json/JsonType.h>
-
-using namespace CTF;
-
-int main() {
-	OStringStream str;
-	str << "{" << EndLine;
-	str << "\t\"message\": \"Hello, world!\"," << EndLine;
-	str << "\t\"status\": 200" << EndLine;
-	str << "}";
-
-	const String json = str.str();
-	const char *szJson = json.c_str();
-	if (!szJson || szJson[0] == '\0') {
-		CErr << "Recevied an invalid JSON string from ostringstream!" << EndLine;
-		return -1;
-	}
-
-	Json::JsonAllocator alloc(1024 * 1024);
-	Json::JsonParser parser(&alloc);
-
-	auto value = parser.Parse(szJson);
-	if (value.type == Json::JSON_INVALID) {
-		CErr << "Received an invalid value from JSON parser!" << EndLine;
-		return -1;
-	}
-
-	return 0;
+int main(int argc, char *argv[]) {
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

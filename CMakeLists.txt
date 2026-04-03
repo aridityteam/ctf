@@ -22,7 +22,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Bin)
 
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-    	set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+	set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 
 	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
 		Debug
@@ -33,14 +33,19 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(MSVC)
-    	add_compile_options(/W4)
+	add_compile_options(/W4 /clang:-Wno-character-conversion /clang:-Wno-error=character-conversion)
 else()
 	set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 	set(CMAKE_HAVE_THREADS_LIBRARY 1)
 	set(CMAKE_USE_WIN32_THREADS_INIT 0)
 	set(CMAKE_USE_PTHREADS_INIT 1)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
-    	add_compile_options(-Wall -Wextra -Wpedantic)
+	add_compile_options(-Wall -Wextra -Wpedantic)
+	if (WIN32)
+		add_compile_options(-Wno-character-conversion -Wno-error=character-conversion)
+	else()
+		add_compile_options(-Wno-narrowing)
+	endif()
 endif()
 
 # global options start here

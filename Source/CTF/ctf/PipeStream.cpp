@@ -150,7 +150,13 @@ namespace CTF {
 
 		DWORD bytes = 0;
 		if (!ReadFile(read_, buffer, (DWORD)size, &bytes, nullptr)) {
-			state_ = StreamState::Error;
+			DWORD err = GetLastError();
+
+			if (err == ERROR_BROKEN_PIPE) {
+				state_ = StreamState::EOFReached;
+			} else {
+				state_ = StreamState::Error;
+			}
 			return 0;
 		}
 		state_ = bytes > 0 ? StreamState::Good : StreamState::EOFReached;
