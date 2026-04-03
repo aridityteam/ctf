@@ -40,7 +40,7 @@ When contributing to the source code, please make sure that your submission foll
 
 - Keep APIs simple, predictable, and consistant
 - Prefer clarity over cleverness. Clarity is always better than cleverness
-- Write XML documentation for public APIs (you can write documentations for private/internal APIs)
+- Write Doxygen-styled documentation for public APIs (you can write documentations for private/internal APIs)
 - Follow existing naming conventions
 - Avoid unnecessary breaking changes
 - Keep implementations cross-platform when possible
@@ -51,7 +51,6 @@ When contributing to the source code, please make sure that your submission foll
 CTF provides a set of threading, and asynchronous utilities. When contributing in this area:
 
 - Avoid blocks/deadlocks on asynchronous code
-- Use cancellation tokens where appropriate
 - Ensure thread-safety is well documented
 - Prefer deterministic behavior over timing-based logic
 
