@@ -139,7 +139,7 @@ namespace CTF::Json {
                 break;
             }
             case JSON_STRING:
-                AppendEscapedJsonString(out, value.string.c_str());
+                AppendEscapedJsonString(out, value.string.CStr());
                 break;
             case JSON_ARRAY:
                 AppendJsonArray(out, value.array);
@@ -194,7 +194,7 @@ namespace CTF::Json {
         }
 
         const JsonValue* jsonrpcField = GetObjectField(root.object, "jsonrpc");
-        if (!jsonrpcField || jsonrpcField->type != JSON_STRING || A_strcmp(jsonrpcField->string.c_str(), "2.0") != 0) {
+        if (!jsonrpcField || jsonrpcField->type != JSON_STRING || A_strcmp(jsonrpcField->string.CStr(), "2.0") != 0) {
             return false;
         }
 
@@ -274,7 +274,7 @@ namespace CTF::Json {
         case JsonRpcMessageType::Request:
         case JsonRpcMessageType::Notification: {
             out += String(",\"method\":");
-            AppendEscapedJsonString(out, message.method.c_str());
+            AppendEscapedJsonString(out, message.method.CStr());
 
             if (message.hasParams) {
                 out += String(",\"params\":");
@@ -284,7 +284,7 @@ namespace CTF::Json {
             if (message.type == JsonRpcMessageType::Request && message.hasId) {
                 out += String(",\"id\":");
                 if (message.idIsString) {
-                    AppendEscapedJsonString(out, message.idString.c_str());
+                    AppendEscapedJsonString(out, message.idString.CStr());
                 } else {
                     char idBuffer[32];
                     snprintf(idBuffer, sizeof(idBuffer), "%d", message.id);
@@ -298,7 +298,7 @@ namespace CTF::Json {
             if (message.hasId) {
                 out += String(",\"id\":");
                 if (message.idIsString) {
-                    AppendEscapedJsonString(out, message.idString.c_str());
+                    AppendEscapedJsonString(out, message.idString.CStr());
                 } else {
                     char idBuffer[32];
                     snprintf(idBuffer, sizeof(idBuffer), "%d", message.id);
@@ -315,7 +315,7 @@ namespace CTF::Json {
             if (message.hasId) {
                 out += String(",\"id\":");
                 if (message.idIsString) {
-                    AppendEscapedJsonString(out, message.idString.c_str());
+                    AppendEscapedJsonString(out, message.idString.CStr());
                 } else {
                     char idBuffer[32];
                     snprintf(idBuffer, sizeof(idBuffer), "%d", message.id);
@@ -330,7 +330,7 @@ namespace CTF::Json {
                 AppendCString(out, codeBuffer);
             }
             out += String(",\"message\":");
-            AppendEscapedJsonString(out, message.error.message.c_str());
+            AppendEscapedJsonString(out, message.error.message.CStr());
 
             if (message.error.hasData) {
                 out += String(",\"data\":");

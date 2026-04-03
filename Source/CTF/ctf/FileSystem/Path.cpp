@@ -74,7 +74,7 @@ namespace CTF::FileSystem {
         return Path(path);
     }
     Path Path::operator=(String& path) {
-        return Path(path.c_str());
+        return Path(path.CStr());
     }
 
     Path Path::operator/(const char* path) {
@@ -86,22 +86,22 @@ namespace CTF::FileSystem {
 
     bool Path::file_exists() {
 #ifdef _WIN32
-        DWORD fileAttributes = GetFileAttributesA(path_.c_str());
+        DWORD fileAttributes = GetFileAttributesA(path_.CStr());
         return fileAttributes != INVALID_FILE_ATTRIBUTES;
 #else
         struct stat buffer;
-        return (stat(path_.c_str(), &buffer) == 0);
+        return (stat(path_.CStr(), &buffer) == 0);
 #endif
     }
 
     bool Path::dir_exists() {
 #ifdef _WIN32
-        DWORD fileAttributes = GetFileAttributesA(path_.c_str());
+        DWORD fileAttributes = GetFileAttributesA(path_.CStr());
         return (fileAttributes != INVALID_FILE_ATTRIBUTES) &&
             (fileAttributes & FILE_ATTRIBUTE_DIRECTORY);
 #else
         struct stat buffer;
-        return (stat(path_.c_str(), &buffer) == 0 && S_ISDIR(buffer.st_mode));
+        return (stat(path_.CStr(), &buffer) == 0 && S_ISDIR(buffer.st_mode));
 #endif
     }
 
@@ -110,7 +110,7 @@ namespace CTF::FileSystem {
 
         const char* path = path_;
         if (!path || !*path) {
-            name.clear();
+            name.Clear();
             return name;
         }
 

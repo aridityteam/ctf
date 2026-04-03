@@ -57,7 +57,7 @@ TEST(JsonTest, Parse) {
 	str << "}";
 
 	const String json = str.str();
-	const char* szJson = json.c_str();
+	const char* szJson = json.CStr();
 	if (!szJson || szJson[0] == '\0') {
 		FAIL() << "Recevied an invalid JSON string from ostringstream!";
 	}

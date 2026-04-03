@@ -87,13 +87,13 @@ namespace CTF {
             return *this;
         }
 
-        const size_t length = text.length();
+        const size_t length = text.Length();
         if (length == 0) {
             state_ = StreamState::Good;
             return *this;
         }
 
-        const size_t bytes = write(text.c_str(), length);
+        const size_t bytes = write(text.CStr(), length);
         state_ = (bytes == length) ? StreamState::Good : StreamState::Error;
         return *this;
     }
@@ -112,7 +112,7 @@ namespace CTF {
         char buffer[512];
 
         if (!fp_) {
-            out.clear();
+            out.Clear();
             state_ = StreamState::Error;
             return *this;
         }
@@ -121,7 +121,7 @@ namespace CTF {
             out = buffer;
             state_ = StreamState::Good;
         } else {
-            out.clear();
+            out.Clear();
             state_ = feof(fp_) ? StreamState::EOFReached : StreamState::Error;
         }
 

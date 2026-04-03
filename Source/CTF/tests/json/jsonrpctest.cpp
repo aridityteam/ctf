@@ -93,7 +93,7 @@ TEST(JsonRpcTest, ParseMessageToString) {
     Json::JsonAllocator alloc(1024 * 1024);
     Json::JsonRpcMessage reparsed;
 
-    ASSERT_TRUE(Json::JsonRpc::Parse(serialized.c_str(), reparsed, alloc));
+    ASSERT_TRUE(Json::JsonRpc::Parse(serialized.CStr(), reparsed, alloc));
     ASSERT_EQ(reparsed.type, outbound.type);
     ASSERT_TRUE(reparsed.hasId);
     ASSERT_EQ(reparsed.id, outbound.id);

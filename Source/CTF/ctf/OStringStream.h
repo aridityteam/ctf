@@ -70,7 +70,7 @@ namespace CTF {
         }
 
         Stream& readString(String& out) override {
-            out.clear();
+            out.Clear();
             state_ = StreamState::Error;
             return *this;
         }
@@ -84,7 +84,7 @@ namespace CTF {
         StreamState state() const override { return state_; }
 
         bool seek(CTF::size_t position) override {
-            if (position > buffer_.length()) {
+            if (position > buffer_.Length()) {
                 state_ = StreamState::Error;
                 return false;
             }
@@ -94,7 +94,7 @@ namespace CTF {
         }
 
         CTF::size_t tell() const override {
-            return buffer_.length();
+            return buffer_.Length();
         }
 
         void flush() override {

@@ -28,7 +28,7 @@
 namespace CTF {
 
 /**
- * @brief Just a simple string class.
+ * @brief Just a simple basic string class.
  */
 template <typename T>
 class BasicString {
@@ -115,14 +115,14 @@ public:
      * @brief Appends a string to the another one
      * @param other The string to append.
      */
-    BasicString append(const BasicString& other) noexcept {
+    BasicString Append(const BasicString& other) noexcept {
         size_t newSize = size_ + other.size_;
         size_t newCapacity = capacity_ == 0 ? 8 : capacity_;
         while (newCapacity < newSize) {
             newCapacity *= 2;
         }
 
-        reserve(newCapacity);
+        Reserve(newCapacity);
 
         if (other.size_ > 0 && other.buffer_) {
             std::char_traits<T>::copy(buffer_ + size_, other.buffer_, other.size_);
@@ -140,7 +140,7 @@ public:
      */
     BasicString &operator=(const BasicString& other) noexcept {
         if (this != &other) {
-            cleanup();
+            CleanUp();
 
             if (!other.buffer_) {
                 capacity_ = 0;
@@ -161,7 +161,7 @@ public:
      */
     BasicString &operator=(BasicString&& other) noexcept {
         if (this != &other) {
-            cleanup();
+            CleanUp();
             buffer_ = other.buffer_;
             size_ = other.size_;
             capacity_ = other.capacity_;
@@ -197,14 +197,14 @@ public:
      * @param other The string to append.
      */
     BasicString operator+=(const BasicString& other) {
-        return append(other);
+        return Append(other);
     }
 
     /**
      * @brief Determines whether the current BasicString is equals to the other one.
      * @param other The BasicString to append.
      */
-    bool equals(const T* other) const {
+    bool Equals(const T* other) const {
         if (std::char_traits<T>::length(other) != size_) return false;
         return !std::char_traits<T>::compare(buffer_, other, size_);
     }
@@ -213,7 +213,7 @@ public:
      * @brief Determines whether the current BasicString is equals to the other one.
      * @param other The BasicString to append.
      */
-    bool equals(const BasicString& other) const {
+    bool Equals(const BasicString& other) const {
         if (std::char_traits<T>::length(other.buffer_) != size_) return false;
         return !std::char_traits<T>::compare(buffer_, other.buffer_, size_);
     }
@@ -222,14 +222,14 @@ public:
      * @brief Determines whether the current BasicString is empty.
      * @returns true if it the current buffer is empty; otherwise false.
      */
-    bool empty() const {
+    bool Empty() const {
         return (!buffer_ || buffer_[0] == '\0') && size_ == 0;
     }
 
     /**
      * @brief Clears out the current BasicString's buffer.
      */
-    void clear() {
+    void Clear() {
         size_ = 0;
 
         if (buffer_)
@@ -239,14 +239,14 @@ public:
     /**
      * @brief Gets the current BasicString's capacity.
      */
-    size_t capacity() const {
+    size_t Capacity() const {
         return capacity_;
     }
 
     /**
      * @brief Reserves a new number of capacity for the current BasicString.
      */
-    void reserve(size_t newCapacity) {
+    void Reserve(size_t newCapacity) {
         if (newCapacity <= capacity_)
             return;
 
@@ -269,7 +269,7 @@ public:
      * @param other The BasicString to append.
      */
     bool operator==(const T* other) const {
-        return equals(other);
+        return Equals(other);
     }
 
     /**
@@ -277,7 +277,7 @@ public:
      * @param other The BasicString to append.
      */
     bool operator==(BasicString& other) const {
-        return equals(other);
+        return Equals(other);
     }
 
     /**
@@ -285,7 +285,7 @@ public:
      * @param other The BasicString to append.
      */
     bool operator!=(const T* other) const {
-        return !equals(other);
+        return !Equals(other);
     }
 
     /**
@@ -293,13 +293,13 @@ public:
      * @param other The BasicString to append.
      */
     bool operator!=(BasicString& other) const {
-        return !equals(other);
+        return !Equals(other);
     }
 
     /**
      * @brief Gets the current string length/size.
      */
-    size_t length() const noexcept { return size_; }
+    size_t Length() const noexcept { return size_; }
 
     /**
      * @brief Converts the string to a raw string.
@@ -309,13 +309,13 @@ public:
     /**
      * @brief Converts the string to a raw string.
      */
-    const T* c_str() const noexcept { return buffer_; }
+    const T* CStr() const noexcept { return buffer_; }
 
 private:
     /**
      * @brief Releases BasicString resources.
      */
-    void cleanup() {
+    void CleanUp() {
         delete[] buffer_;
         buffer_ = nullptr;
         size_ = 0;

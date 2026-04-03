@@ -32,8 +32,8 @@ template <typename T> int Hash<T>::operator()(const T &key) const {
 
 int Hash<String>::operator()(const String &s) const {
   int Hash = 5381;
-  const char *str = s.c_str();
-  int len = s.length();
+  const char *str = s.CStr();
+  int len = s.Length();
   for (int i = 0; i < len; ++i)
     Hash = ((Hash << 5) + Hash) + static_cast<unsigned char>(str[i]);
   return Hash;

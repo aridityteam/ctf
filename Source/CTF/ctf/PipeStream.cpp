@@ -292,13 +292,13 @@ namespace CTF {
 	}
 
 	Stream& PipeStream::writeString(const String& text) {
-		const size_t total = text.length();
+		const size_t total = text.Length();
 		if (total == 0) {
 			state_ = StreamState::Good;
 			return *this;
 		}
 
-		if (write(text.c_str(), total) != total) {
+		if (write(text.CStr(), total) != total) {
 			state_ = StreamState::Error;
 		}
 
@@ -317,7 +317,7 @@ namespace CTF {
 		if (readline(buffer, sizeof(buffer))) {
 			out = buffer;
 		} else {
-			out.clear();
+			out.Clear();
 		}
 		return *this;
 	}

@@ -31,7 +31,7 @@ namespace CTF::KV {
             return '\0';
         }
 
-        return text.c_str()[offset];
+        return text.CStr()[offset];
     }
 
     char KeyValuesParser::Next() {
@@ -39,11 +39,11 @@ namespace CTF::KV {
             return '\0';
         }
 
-        return text.c_str()[offset++];
+        return text.CStr()[offset++];
     }
 
     bool KeyValuesParser::IsEnd() const {
-        return offset >= text.length() || !text.c_str();
+        return offset >= text.Length() || !text.CStr();
     }
 
     void KeyValuesParser::SkipWhitespace()
@@ -55,7 +55,7 @@ namespace CTF::KV {
             }
 
             // Valve-style line comment.
-            if (Peek() == '/' && offset + 1 < text.length() && text.c_str()[offset + 1] == '/') {
+            if (Peek() == '/' && offset + 1 < text.Length() && text.CStr()[offset + 1] == '/') {
                 offset += 2;
                 while (!IsEnd() && Peek() != '\n') {
                     ++offset;
@@ -64,10 +64,10 @@ namespace CTF::KV {
             }
 
             // C-style block comment.
-            if (Peek() == '/' && offset + 1 < text.length() && text.c_str()[offset + 1] == '*') {
+            if (Peek() == '/' && offset + 1 < text.Length() && text.CStr()[offset + 1] == '*') {
                 offset += 2;
                 while (!IsEnd()) {
-                    if (Peek() == '*' && offset + 1 < text.length() && text.c_str()[offset + 1] == '/') {
+                    if (Peek() == '*' && offset + 1 < text.Length() && text.CStr()[offset + 1] == '/') {
                         offset += 2;
                         break;
                     }
@@ -157,21 +157,21 @@ namespace CTF::KV {
     {
         KeyValuesValue v;
 
-        if (token.empty())
+        if (token.Empty())
         {
             v.type = KeyValuesType::String;
             v.stringValue = "";
             return v;
         }
 
-        if (A_stricmp(token.c_str(), "true") == 0)
+        if (A_stricmp(token.CStr(), "true") == 0)
         {
             v.type = KeyValuesType::Bool;
             v.boolValue = true;
             return v;
         }
 
-        if (A_stricmp(token.c_str(), "false") == 0)
+        if (A_stricmp(token.CStr(), "false") == 0)
         {
             v.type = KeyValuesType::Bool;
             v.boolValue = false;
@@ -180,7 +180,7 @@ namespace CTF::KV {
 
         errno = 0;
         char* intEnd = nullptr;
-        const long intValue = std::strtol(token.c_str(), &intEnd, 10);
+        const long intValue = std::strtol(token.CStr(), &intEnd, 10);
         if (errno == 0 && intEnd && *intEnd == '\0')
         {
             v.type = KeyValuesType::Int;
@@ -190,7 +190,7 @@ namespace CTF::KV {
 
         errno = 0;
         char* floatEnd = nullptr;
-        const float floatValue = std::strtof(token.c_str(), &floatEnd);
+        const float floatValue = std::strtof(token.CStr(), &floatEnd);
         if (errno == 0 && floatEnd && *floatEnd == '\0')
         {
             v.type = KeyValuesType::Float;
@@ -217,7 +217,7 @@ namespace CTF::KV {
 
             String key = ParseToken();
 
-            if (key.empty()) {
+            if (key.Empty()) {
                 break;
             }
 
@@ -238,7 +238,7 @@ namespace CTF::KV {
             SkipWhitespace();
 
             String valueOrBlock = ParseToken();
-            if (valueOrBlock.empty()) {
+            if (valueOrBlock.Empty()) {
                 break;
             }
 

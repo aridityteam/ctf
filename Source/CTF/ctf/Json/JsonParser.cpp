@@ -108,7 +108,7 @@ namespace CTF::Json {
     }
 
     bool JsonParser::ParseString(String& out) {
-        out.clear();
+        out.Clear();
 
         if (Next() != '"')
             return false;
@@ -365,15 +365,15 @@ namespace CTF::Json {
             for (int i = 0; i < obj.count; i++)
                 newEntries[i] = obj.entries[i];
 
-            char* key = static_cast<char*>(allocator->Allocate(static_cast<int>(keyText.length() + 1)));
+            char* key = static_cast<char*>(allocator->Allocate(static_cast<int>(keyText.Length() + 1)));
             if (!key) {
                 return MakeInvalid();
             }
 
-            for (size_t i = 0; i < keyText.length(); ++i) {
-                key[i] = keyText.c_str()[i];
+            for (size_t i = 0; i < keyText.Length(); ++i) {
+                key[i] = keyText.CStr()[i];
             }
-            key[keyText.length()] = '\0';
+            key[keyText.Length()] = '\0';
 
             newEntries[obj.count].key = key;
 
