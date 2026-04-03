@@ -38,6 +38,7 @@
   * along with Cereon Template Framework. If not, see <https://www.gnu.org/licenses/>.
   */
 
+#include <IOStream.h>
 #include <OStringStream.h>
 
 #include <Json/Json.h>
