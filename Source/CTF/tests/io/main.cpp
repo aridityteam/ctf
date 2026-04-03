@@ -23,82 +23,74 @@
 #include <IOStream.h>
 #include <OStringStream.h>
 #include <PipeStream.h>
+#include <gtest/gtest.h>
 
 using namespace CTF;
 
-namespace {
-    bool AssertOrFail(bool condition, const char* message) {
-        if (!condition) {
-            CErr << message << EndLine;
-            return false;
-        }
-        return true;
-    }
+TEST(OStringStreamTest, AddNewLine) {
+    OStringStream s;
+    s << "line" << EndLine;
+    ASSERT_EQ(s.str(), "line\n");
 }
 
-int main() {
-    {
-        OStringStream s;
-        s << "line" << EndLine;
-        if (!AssertOrFail(s.str() == "line\n", "EndLine manipulator failed on Stream/OStringStream")) return -1;
-    }
+TEST(PipeStreamTest, WriteAndRead) {
+    PipeStream stream;
+    ASSERT_TRUE(stream.create());
+    ASSERT_TRUE(stream.valid());
 
-    {
-        AnonymousPipeStream pipe;
-        PipeStream& reader = pipe.reader();
-        PipeStream& writer = pipe.writer();
+    stream << "abc\n";
+    char buffer[16] = { 0 };
+    ASSERT_TRUE(stream.readline(buffer, sizeof(buffer)));
+    ASSERT_EQ(A_strcmp(buffer, "abc\n"), 0);
 
-        if (!AssertOrFail(reader.valid(), "AnonymousPipeStream reader should be valid")) return -1;
-        if (!AssertOrFail(writer.valid(), "AnonymousPipeStream writer should be valid")) return -1;
+    ASSERT_FALSE(stream.seek(0));
+    ASSERT_EQ(stream.state(), StreamState::Error);
 
-        const char payload[] = "ping";
-        const size_t wrote = writer.write(payload, sizeof(payload) - 1);
-        if (!AssertOrFail(wrote == sizeof(payload) - 1, "Failed to write payload into pipe")) return -1;
+    stream.close();
+    ASSERT_FALSE(stream.valid());
+}
 
-        char buffer[8] = {0};
-        const size_t got = reader.read(buffer, sizeof(payload) - 1);
-        if (!AssertOrFail(got == sizeof(payload) - 1, "Failed to read payload from pipe")) return -1;
-        if (!AssertOrFail(A_memcmp(buffer, payload, sizeof(payload) - 1) == 0, "Pipe payload mismatch")) return -1;
+TEST(PipeStreamTest, AnonymousWriteAndRead) {
+    AnonymousPipeStream pipe;
+    PipeStream& reader = pipe.reader();
+    PipeStream& writer = pipe.writer();
 
-        const char* line = "hello pipe\n";
-        if (!AssertOrFail(writer.write(line, A_strlen(line)) == A_strlen(line), "Failed to write newline payload")) return -1;
+    ASSERT_TRUE(reader.valid());
+    ASSERT_TRUE(writer.valid());
 
-        char lineBuffer[64] = {0};
-        if (!AssertOrFail(reader.readline(lineBuffer, sizeof(lineBuffer)), "readline failed")) return -1;
-        if (!AssertOrFail(A_strcmp(lineBuffer, line) == 0, "readline payload mismatch")) return -1;
+    const char payload[] = "ping";
+    const size_t wrote = writer.write(payload, sizeof(payload) - 1);
+    ASSERT_EQ(wrote, sizeof(payload) - 1);
 
-        writer.close();
-        char ch = '\0';
-        const size_t eofRead = reader.read(&ch, 1);
-        if (!AssertOrFail(eofRead == 0, "Expected EOF read size 0 after writer close")) return -1;
-        if (!AssertOrFail(reader.state() == StreamState::EOFReached, "Reader state should be EOF after writer close")) return -1;
+    char buffer[8] = { 0 };
+    const size_t got = reader.read(buffer, sizeof(payload) - 1);
+    ASSERT_EQ(got, sizeof(payload) - 1);
+    ASSERT_EQ(A_memcmp(buffer, payload, sizeof(payload) - 1), 0);
 
-        const size_t invalidRead = writer.read(&ch, 1);
-        if (!AssertOrFail(invalidRead == 0, "Writer-only stream read should fail")) return -1;
-        if (!AssertOrFail(writer.state() == StreamState::Error, "Writer-only stream read should set Error state")) return -1;
+    const char* line = "hello pipe\n";
+    ASSERT_EQ(writer.write(line, A_strlen(line)), A_strlen(line));
 
-        const char x = 'x';
-        const size_t invalidWrite = reader.write(&x, 1);
-        if (!AssertOrFail(invalidWrite == 0, "Reader-only stream write should fail")) return -1;
-        if (!AssertOrFail(reader.state() == StreamState::Error, "Reader-only stream write should set Error state")) return -1;
-    }
+    char lineBuffer[64] = { 0 };
+    ASSERT_TRUE(reader.readline(lineBuffer, sizeof(lineBuffer)));
+    ASSERT_EQ(A_strcmp(lineBuffer, line), 0);
 
-    {
-        PipeStream stream;
-        if (!AssertOrFail(stream.create(), "PipeStream::create failed")) return -1;
-        if (!AssertOrFail(stream.valid(), "PipeStream should be valid after create")) return -1;
+    writer.close();
+    char ch = '\0';
+    const size_t eofRead = reader.read(&ch, 1);
+    ASSERT_EQ(eofRead, 0);
+    ASSERT_EQ(reader.state(), StreamState::EOFReached);
 
-        stream << "abc\n";
-        char buffer[16] = {0};
-        if (!AssertOrFail(stream.readline(buffer, sizeof(buffer)), "PipeStream readline after operator<< failed")) return -1;
-        if (!AssertOrFail(A_strcmp(buffer, "abc\n") == 0, "PipeStream operator<< payload mismatch")) return -1;
+    const size_t invalidRead = writer.read(&ch, 1);
+    ASSERT_EQ(invalidRead, 0);
+    ASSERT_EQ(writer.state(), StreamState::Error);
 
-        if (!AssertOrFail(!stream.seek(0), "PipeStream seek should fail")) return -1;
-        if (!AssertOrFail(stream.state() == StreamState::Error, "PipeStream seek failure should set Error state")) return -1;
+    const char x = 'x';
+    const size_t invalidWrite = reader.write(&x, 1);
+    ASSERT_EQ(invalidWrite, 0);
+    ASSERT_EQ(reader.state(), StreamState::Error);
+}
 
-        stream.close();
-        if (!AssertOrFail(!stream.valid(), "PipeStream should be invalid after close")) return -1;
-    }
-
-    return 0;
+int main(int argc, char *argv[]) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

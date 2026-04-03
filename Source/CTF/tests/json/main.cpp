@@ -26,9 +26,11 @@
 #include <Json/JsonParser.h>
 #include <Json/JsonType.h>
 
+#include <gtest/gtest.h>
+
 using namespace CTF;
 
-int main() {
+TEST(JsonTest, Parse) {
 	OStringStream str;
 	str << "{" << EndLine;
 	str << "\t\"message\": \"Hello, world!\"," << EndLine;
@@ -36,10 +38,9 @@ int main() {
 	str << "}";
 
 	const String json = str.str();
-	const char *szJson = json.c_str();
+	const char* szJson = json.c_str();
 	if (!szJson || szJson[0] == '\0') {
-		CErr << "Recevied an invalid JSON string from ostringstream!" << EndLine;
-		return -1;
+		FAIL() << "Recevied an invalid JSON string from ostringstream!";
 	}
 
 	Json::JsonAllocator alloc(1024 * 1024);
@@ -47,9 +48,11 @@ int main() {
 
 	auto value = parser.Parse(szJson);
 	if (value.type == Json::JSON_INVALID) {
-		CErr << "Received an invalid value from JSON parser!" << EndLine;
-		return -1;
+		FAIL() << "Received an invalid value from JSON parser!";
 	}
+}
 
-	return 0;
+int main(int argc, char *argv[]) {
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
