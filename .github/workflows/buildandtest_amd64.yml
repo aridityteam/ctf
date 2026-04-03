@@ -3,7 +3,15 @@ name: Build & Test Cereon Template Framework
 on:
   push:
     branches: ["master"]
+    paths:
+      - ".github/workflows/**"
+      - "Source/**"
+      - "CMakeLists.txt"
   pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "Source/**"
+      - "CMakeLists.txt"
 
 jobs:
   build:
