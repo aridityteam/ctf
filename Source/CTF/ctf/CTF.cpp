@@ -482,5 +482,70 @@ namespace CTF {
         return buf;
     }
 
+    int A_atoi(const char* str) {
+        if (!str)
+            return -1;
+
+        int result = 0;
+        int sign = 1;
+
+        // Whitespaces..
+        while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\r' || *str == '\f' || *str == '\v') {
+            str++;
+        }
+
+        if (*str == '-') {
+            sign = -1;
+            str++;
+        }
+        else if (*str == '+') {
+            str++;
+        }
+
+        while (*str >= '0' && *str <= '9')
+        {
+            result = result * 10 + (*str - '0');
+            str++;
+        }
+
+        return result * sign;
+    }
+
+    char* A_itoa(int value, char* buffer) {
+        if (!buffer)
+            return nullptr;
+
+        int i = 0;
+        int sign = value;
+
+        if (value < 0)
+            value = -value;
+
+        // The digits
+        do {
+            buffer[i++] = (value % 10) + '0';
+            value /= 10;
+        } while (value > 0);
+
+        if (sign < 0)
+            buffer[i++] = '-';
+
+        buffer[i] = '\0';
+
+        // Reverse the string
+        int start = 0;
+        int end = i - 1;
+
+        while (start < end) {
+            char tmp = buffer[start];
+            buffer[start] = buffer[end];
+            buffer[end] = tmp;
+            start++;
+            end--;
+        }
+
+        return buffer;
+    }
+
 } // namespace CTF
 
