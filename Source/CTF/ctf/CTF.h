@@ -114,52 +114,6 @@ namespace CTF {
 
     CTF_API int A_atoi(const char* str);
     CTF_API char* A_itoa(int value, char* buffer);
-
-    //===============================================================================
-    // WString manipulation utils
-
-    CTF_API wchar_t* A_wcscpy(wchar_t* dest, const wchar_t* src);
-    CTF_API wchar_t* A_wcsncpy(wchar_t* dest, const wchar_t* src, size_t n);
-    CTF_API wchar_t* A_wcscat(wchar_t* dest, const wchar_t* src);
-    CTF_API wchar_t* A_wcsncat(wchar_t* dest, const wchar_t* src, size_t n);
-
-    CTF_API int A_iswspace(wint_t c);
-    CTF_API wint_t A_towlower(wint_t c);
-
-    CTF_API int A_wcscmp(const wchar_t* lhs, const wchar_t* rhs);
-    CTF_API int A_wcsicmp(const wchar_t* lhs, const wchar_t* rhs);
-    CTF_API int A_wcsncmp(const wchar_t* lhs, const wchar_t* rhs, size_t n);
-    CTF_API int A_wcsnicmp(const wchar_t* lhs, const wchar_t* rhs, size_t n);
-    CTF_API int A_wcscoll(const wchar_t* lhs, const wchar_t* rhs); // wrapper for wcsxfrm + wcscmp
-
-    CTF_API const wchar_t* A_wcschr(const wchar_t* str, wchar_t ch);
-    CTF_API wchar_t* A_wcschr(wchar_t* str, wchar_t ch);
-    CTF_API const wchar_t* A_wcsrchr(const wchar_t* str, wchar_t ch);
-    CTF_API wchar_t* A_wcsrchr(wchar_t* str, wchar_t ch);
-    CTF_API const wchar_t* A_wcsstr(const wchar_t* haystack, const wchar_t* needle);
-    CTF_API wchar_t* A_wcsstr(wchar_t* haystack, const wchar_t* needle);
-    CTF_API const wchar_t* A_wcsnchr(const wchar_t* str, wchar_t ch, size_t count); // search first n chars
-    CTF_API wchar_t* A_wcsnchr(wchar_t* str, wchar_t ch, size_t count);
-
-    CTF_API size_t A_wcslen(const wchar_t* str);
-    CTF_API size_t A_wcsspn(const wchar_t* dest, const wchar_t* src);
-    CTF_API size_t A_wcscspn(const wchar_t* dest, const wchar_t* src);
-    CTF_API size_t A_wcsxfrm(wchar_t* dest, const wchar_t* src, size_t count); // same as strxfrm
-
-    CTF_API wchar_t* A_wcstok(wchar_t* str, const wchar_t* delim); // static internal context
-    CTF_API wchar_t* A_wcstok_r(wchar_t* str, const wchar_t* delim, wchar_t** saveptr); // reentrant
-
-    CTF_API void* A_wmemset(void* ptr, wchar_t value, size_t count);
-    CTF_API int A_wmemcmp(const void* lhs, const void* rhs, size_t count);
-    CTF_API void* A_wmemcpy(void* dest, const void* src, size_t count);
-    CTF_API void* A_wmemmove(void* dest, const void* src, size_t count);
-    CTF_API const void* A_wmemchr(const void* ptr, wchar_t value, size_t num);
-    CTF_API void* A_wmemchr(void* ptr, wchar_t value, size_t num);
-
-    CTF_API wchar_t* A_wcstrim(wchar_t* buf);              // trim spaces/tabs/newlines
-    CTF_API wchar_t* A_wcstrimws(wchar_t* buf);  // trim any iswspace()
-
-    CTF_API wchar_t* A_wcsdup(const wchar_t* src);
 }
 
 #endif // !CTF_H
