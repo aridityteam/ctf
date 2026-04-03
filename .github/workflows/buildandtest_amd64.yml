@@ -27,6 +27,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: recursive
 
       - name: Setup MSVC
         if: matrix.os == 'windows-latest' && matrix.preset == 'windows-msvc'
