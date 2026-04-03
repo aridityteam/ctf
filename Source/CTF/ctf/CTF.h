@@ -112,6 +112,9 @@ namespace CTF {
     CTF_API char *A_strtrim(char *buf);
     CTF_API char *A_strtrimws(char *buf);
 
+    CTF_API int A_atoi(const char* str);
+    CTF_API char* A_itoa(int value, char* buffer);
+
     //===============================================================================
     // WString manipulation utils
 
