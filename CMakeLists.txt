@@ -44,7 +44,7 @@ else()
 	if (WIN32)
 		add_compile_options(-Wno-character-conversion -Wno-error=character-conversion)
 	else()
-		add_compile_definitions(-Wno-narrowing)
+		add_compile_options(-Wno-narrowing)
 	endif()
 endif()
 
