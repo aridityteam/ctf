@@ -40,7 +40,12 @@ else()
 	set(CMAKE_USE_WIN32_THREADS_INIT 0)
 	set(CMAKE_USE_PTHREADS_INIT 1)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
-	add_compile_options(-Wno-character-conversion -Wall -Wextra -Wpedantic -Wno-error=character-conversion)
+	add_compile_options(-Wall -Wextra -Wpedantic)
+	if (WIN32)
+		add_compile_options(-Wno-character-conversion -Wno-error=character-conversion)
+	else()
+		add_compile_definitions(-Wno-narrowing)
+	endif()
 endif()
 
 # global options start here
