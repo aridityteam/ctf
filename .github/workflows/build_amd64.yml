@@ -1,4 +1,4 @@
-name: Build Cereon Template Framework
+name: Build & Test Cereon Template Framework
 
 on:
   push:
@@ -45,3 +45,6 @@ jobs:
 
       - name: Build
         run: cmake --build build/${{ matrix.preset }} --config Release --parallel
+
+      - name: Test
+        run: ctest --test-dir build/${{ matrix.preset }} 
