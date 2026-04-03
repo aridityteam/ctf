@@ -10,6 +10,8 @@ set(CTF_INC_DIRS ${SRC_DIR}/CTF/ctf)
 
 set(SOURCES
 	"main.cpp"
+	"ostringstreamtest.cpp"
+	"pipestreamtest.cpp"
 )
 
 if(MSVC)

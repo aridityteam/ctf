@@ -10,6 +10,8 @@ set(CTF_INC_DIRS ${SRC_DIR}/CTF/ctf)
 
 set(SOURCES
 	"main.cpp"
+	"jsontest.cpp"
+	"jsonrpctest.cpp"
 )
 
 if(MSVC)
