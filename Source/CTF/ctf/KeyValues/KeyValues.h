@@ -24,7 +24,7 @@
 
 #include "KeyValuesType.h"
 #include "KeyValuesValue.h"
-#include "String.h"
+#include "BasicString.h"
 #include "Collections/Map.h"
 #include <memory>
 

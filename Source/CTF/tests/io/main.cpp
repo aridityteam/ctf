@@ -24,8 +24,6 @@
 #include <OStringStream.h>
 #include <PipeStream.h>
 
-#include <cstring>
-
 using namespace CTF;
 
 namespace {
@@ -60,14 +58,14 @@ int main() {
         char buffer[8] = {0};
         const size_t got = reader.read(buffer, sizeof(payload) - 1);
         if (!AssertOrFail(got == sizeof(payload) - 1, "Failed to read payload from pipe")) return -1;
-        if (!AssertOrFail(Q_memcmp(buffer, payload, sizeof(payload) - 1) == 0, "Pipe payload mismatch")) return -1;
+        if (!AssertOrFail(A_memcmp(buffer, payload, sizeof(payload) - 1) == 0, "Pipe payload mismatch")) return -1;
 
         const char* line = "hello pipe\n";
-        if (!AssertOrFail(writer.write(line, Q_strlen(line)) == Q_strlen(line), "Failed to write newline payload")) return -1;
+        if (!AssertOrFail(writer.write(line, A_strlen(line)) == A_strlen(line), "Failed to write newline payload")) return -1;
 
         char lineBuffer[64] = {0};
         if (!AssertOrFail(reader.readline(lineBuffer, sizeof(lineBuffer)), "readline failed")) return -1;
-        if (!AssertOrFail(Q_strcmp(lineBuffer, line) == 0, "readline payload mismatch")) return -1;
+        if (!AssertOrFail(A_strcmp(lineBuffer, line) == 0, "readline payload mismatch")) return -1;
 
         writer.close();
         char ch = '\0';
@@ -93,7 +91,7 @@ int main() {
         stream << "abc\n";
         char buffer[16] = {0};
         if (!AssertOrFail(stream.readline(buffer, sizeof(buffer)), "PipeStream readline after operator<< failed")) return -1;
-        if (!AssertOrFail(Q_strcmp(buffer, "abc\n") == 0, "PipeStream operator<< payload mismatch")) return -1;
+        if (!AssertOrFail(A_strcmp(buffer, "abc\n") == 0, "PipeStream operator<< payload mismatch")) return -1;
 
         if (!AssertOrFail(!stream.seek(0), "PipeStream seek should fail")) return -1;
         if (!AssertOrFail(stream.state() == StreamState::Error, "PipeStream seek failure should set Error state")) return -1;

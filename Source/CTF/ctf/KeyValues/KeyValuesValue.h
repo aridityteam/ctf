@@ -23,7 +23,7 @@
 #pragma once
 
 #include "KeyValuesType.h"
-#include "String.h"
+#include "BasicString.h"
 
 namespace CTF::KV {
     struct CTF_API KeyValuesValue

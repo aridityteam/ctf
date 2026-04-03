@@ -40,8 +40,8 @@ namespace CTF {
 			return;
 		}
 
-		read_stream_  = std::move(PipeStream(r, INVALID_HANDLE_VALUE));
-		write_stream_ = std::move(PipeStream(INVALID_HANDLE_VALUE, w));
+		read_stream_  = Move(PipeStream(r, INVALID_HANDLE_VALUE));
+		write_stream_ = Move(PipeStream(INVALID_HANDLE_VALUE, w));
 #else
 		int fds[2];
 

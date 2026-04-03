@@ -20,7 +20,7 @@
 
 #include <IOStream.h>
 #include <OStringStream.h>
-#include <String.h>
+#include <BasicString.h>
 
 #include <Json/Json.h>
 #include <Json/JsonParser.h>

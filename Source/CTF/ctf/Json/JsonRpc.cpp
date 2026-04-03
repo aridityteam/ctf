@@ -42,7 +42,7 @@ namespace CTF::Json {
                     continue;
                 }
 
-                if (Q_strcmp(entry.key, key) == 0) {
+                if (A_strcmp(entry.key, key) == 0) {
                     return entry.value;
                 }
             }
@@ -194,7 +194,7 @@ namespace CTF::Json {
         }
 
         const JsonValue* jsonrpcField = GetObjectField(root.object, "jsonrpc");
-        if (!jsonrpcField || jsonrpcField->type != JSON_STRING || Q_strcmp(jsonrpcField->string.c_str(), "2.0") != 0) {
+        if (!jsonrpcField || jsonrpcField->type != JSON_STRING || A_strcmp(jsonrpcField->string.c_str(), "2.0") != 0) {
             return false;
         }
 

@@ -23,7 +23,7 @@
 #pragma once
 
 #include "Stream.h"
-#include "String.h"
+#include "BasicString.h"
 
 namespace CTF {
     

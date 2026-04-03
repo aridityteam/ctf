@@ -23,8 +23,8 @@
 #pragma once
 
 #include <cstddef>
-#include <cwchar>
 #include <cstring>
+#include <cwchar>
 #include <cstdlib>
 
 #ifndef CTF_API
@@ -59,12 +59,12 @@ namespace CTF {
 	using size_t = std::size_t;
 	using wint_t = std::wint_t;
 
-
     //===============================================================================
     // String manipulation utils
 
     CTF_API char *A_strcpy(char* dest, const char* src);
     CTF_API char *A_strncpy(char* dest, const char* src, size_t count);
+
     CTF_API char *A_strcat(char* dest, const char* src);
     CTF_API char *A_strncat(char* dest, const char* src, size_t count);
     CTF_API size_t A_strlen(const char* str);
@@ -158,110 +158,5 @@ namespace CTF {
 
     CTF_API wchar_t* A_wcsdup(const wchar_t* src);
 }
-
-#define USE_CTF_STRING_UTILS 1
-
-#if USE_CTF_STRING_UTILS
-#define Q_strcpy CTF::A_strcpy
-#define Q_strncpy CTF::A_strncpy
-#define Q_strcat CTF::A_strcat
-#define Q_strncat CTF::A_strncat
-#define Q_strlen CTF::A_strlen
-#define Q_strxfrm CTF::A_strxfrm
-#define Q_strcmp CTF::A_strcmp
-#define Q_stricmp CTF::A_stricmp
-#define Q_strncmp CTF::A_strncmp
-#define Q_strnicmp CTF::A_strnicmp
-#define Q_strcoll CTF::A_strcoll
-#define Q_strchr CTF::A_strchr
-#define Q_strrchr CTF::A_strrchr
-#define Q_strspn CTF::A_strspn
-#define Q_strcspn CTF::A_strcspn
-#define Q_strpbrk CTF::A_strpbrk
-#define Q_strstr CTF::A_strstr
-#define Q_strtok CTF::A_strtok
-#define Q_strtrim CTF::A_strtrim
-#define Q_strtrimws CTF::A_strtrimws
-
-#define Q_memcmp CTF::A_memcmp
-#define Q_memchr CTF::A_memchr
-#define Q_memcpy CTF::A_memcpy
-#define Q_memmove CTF::A_memmove
-#define Q_memset CTF::A_memset
-
-#define Q_isspace CTF::A_isspace
-#define Q_tolower CTF::A_tolower
-
-#define Q_wcscpy      	CTF::A_wcscpy
-#define Q_wcsncpy     	CTF::A_wcsncpy
-#define Q_wcscat      	CTF::A_wcscat
-#define Q_wcsncat     	CTF::A_wcsncat
-#define Q_wcslen      	CTF::A_wcslen
-#define Q_wcsxfrm     	CTF::A_wcsxfrm
-#define Q_wcscmp      	CTF::A_wcscmp
-#define Q_wcsncmp     	CTF::A_wcsncmp
-#define Q_wcscoll     	CTF::A_wcscoll
-#define Q_wcsicmp     	CTF::A_wcsicmp
-#define Q_wcsnicmp    	CTF::A_wcsnicmp
-#define Q_wcschr      	CTF::A_wcschr
-#define Q_wcsrchr     	CTF::A_wcsrchr
-#define Q_wcsspn      	CTF::A_wcsspn
-#define Q_wcscspn     	CTF::A_wcscspn
-#define Q_wcsstr      	CTF::A_wcsstr
-#define Q_wcstok      	CTF::A_wcstok
-#define Q_wcstok_r    	CTF::A_wcstok_r
-#define Q_wcstrim		CTF::A_wcstrim
-#define Q_wcstrimws 	CTF::A_wcstrimws
-#define Q_wcsdup      	CTF::A_wcsdup
-
-#define Q_wmemchr     CTF::A_wmemchr
-#define Q_wmemcpy     CTF::A_wmemcpy
-#define Q_wmemmove    CTF::A_wmemmove
-#define Q_wmemset     CTF::A_wmemset
-#define Q_wmemcmp     CTF::A_wmemcmp
-#else
-#define Q_strcpy ::strcpy
-#define Q_strncpy ::strncpy
-#define Q_strcat ::strcat
-#define Q_strncat ::strncat
-#define Q_strlen ::strlen
-#define Q_strxfrm ::strxfrm
-#define Q_strcmp ::strcmp
-#define Q_strncmp ::strncmp
-#define Q_strcoll ::strcoll
-#define Q_strchr ::strchr
-#define Q_strrchr ::strrchr
-#define Q_strspn ::strspn
-#define Q_strcspn ::strcspn
-#define Q_strpbrk ::strpbrk
-#define Q_strstr ::strstr
-#define Q_strtok ::strtok
-
-#define Q_memchr ::memchr
-#define Q_memcpy ::memcpy
-#define Q_memmove ::memmove
-#define Q_memset ::memset
-
-#define Q_wcscpy      ::wcscpy
-#define Q_wcsncpy     ::wcsncpy
-#define Q_wcscat      ::wcscat
-#define Q_wcsncat     ::wcsncat
-#define Q_wcslen      ::wcslen
-#define Q_wcsxfrm     ::wcsxfrm
-#define Q_wcscmp      ::wcscmp
-#define Q_wcsncmp     ::wcsncmp
-#define Q_wcscoll     ::wcscoll
-#define Q_wcschr      ::wcschr
-#define Q_wcsrchr     ::wcsrchr
-#define Q_wcsspn      ::wcsspn
-#define Q_wcscspn     ::wcscspn
-#define Q_wcsstr      ::wcsstr
-#define Q_wcstok      ::wcstok
-#define Q_wmemchr     ::wmemchr
-#define Q_wmemcpy     ::wmemcpy
-#define Q_wmemmove    ::wmemmove
-#define Q_wmemset     ::wmemset
-#define Q_wmemcmp     ::wmemcmp
-#endif // USE_CTF_STRING_UTILS
 
 #endif // !CTF_H

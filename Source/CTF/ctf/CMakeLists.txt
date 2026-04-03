@@ -10,8 +10,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wno-return-local-addr)
 endif()
 
-set(CTF_INC_DIR ${GLOBAL_INC_DIR}/ctf)
-
 set(SOURCES
 	# basic stuff
 	"Algorithm.cpp"
@@ -49,8 +47,8 @@ set(SOURCES
 	"Logging/LogListener.h"
 
 	# string
-	"String.inl"
-	"String.h"
+	#"String.inl"
+	"BasicString.h"
 
 	# threading
 	#"Threading/Thread.cpp"
@@ -165,4 +163,4 @@ endif()
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE CTF.h)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CTF_INC_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

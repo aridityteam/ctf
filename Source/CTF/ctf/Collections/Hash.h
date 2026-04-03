@@ -23,7 +23,7 @@
 #pragma once
 
 
-#include "String.h"
+#include "BasicString.h"
 
 namespace CTF::Collections {
 

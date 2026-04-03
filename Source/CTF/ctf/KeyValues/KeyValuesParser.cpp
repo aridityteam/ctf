@@ -49,7 +49,7 @@ namespace CTF::KV {
     void KeyValuesParser::SkipWhitespace()
     {
         while (!IsEnd()) {
-            if (Q_isspace(Peek())) {
+            if (A_isspace(Peek())) {
                 ++offset;
                 continue;
             }
@@ -143,7 +143,7 @@ namespace CTF::KV {
             while (!IsEnd())
             {
                 const char ch = Peek();
-                if (Q_isspace(ch) || ch == '{' || ch == '}') {
+                if (A_isspace(ch) || ch == '{' || ch == '}') {
                     break;
                 }
                 token += String(Next());
@@ -164,14 +164,14 @@ namespace CTF::KV {
             return v;
         }
 
-        if (Q_stricmp(token.c_str(), "true") == 0)
+        if (A_stricmp(token.c_str(), "true") == 0)
         {
             v.type = KeyValuesType::Bool;
             v.boolValue = true;
             return v;
         }
 
-        if (Q_stricmp(token.c_str(), "false") == 0)
+        if (A_stricmp(token.c_str(), "false") == 0)
         {
             v.type = KeyValuesType::Bool;
             v.boolValue = false;

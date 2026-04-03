@@ -22,7 +22,7 @@
 #define CTF_JSONVALUE_H
 #pragma once
 
-#include "String.h"
+#include "BasicString.h"
 #include "JsonType.h"
 #include "JsonArray.h"
 #include "JsonObject.h"

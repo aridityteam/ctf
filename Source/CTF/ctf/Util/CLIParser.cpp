@@ -41,11 +41,11 @@ namespace CTF::Utilities {
     bool CLIParser::hasOption(const char* option) const {
         for (int i = 1; i < argc_; ++i) {
             const char* arg = argv_[i];
-            if (!Q_stricmp(arg, option))
+            if (!A_stricmp(arg, option))
                 return true;
 
-            if (const char* eq = Q_strchr(arg, '=')) {
-                if (size_t len = static_cast<size_t>(eq - arg); !Q_strnicmp(arg, option, len) && option[len] == '\0')
+            if (const char* eq = A_strchr(arg, '=')) {
+                if (size_t len = static_cast<size_t>(eq - arg); !A_strnicmp(arg, option, len) && option[len] == '\0')
                     return true;
             }
         }
@@ -97,16 +97,16 @@ namespace CTF::Utilities {
         for (int i = 1; i < argc_; ++i)
         {
             const char* arg = argv_[i];
-            if (!Q_stricmp(arg, option)) {
+            if (!A_stricmp(arg, option)) {
                 if (i + 1 < argc_)
                     return argv_[i + 1];
 
                 return nullptr;
             }
 
-            if (const char* eq = Q_strchr(arg, '=')) {
+            if (const char* eq = A_strchr(arg, '=')) {
                 size_t len = static_cast<size_t>(eq - arg);
-                if (!Q_strnicmp(arg, option, len) && option[len] == '\0')
+                if (!A_strnicmp(arg, option, len) && option[len] == '\0')
                     return eq + 1;
             }
         }

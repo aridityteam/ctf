@@ -22,7 +22,7 @@
 #define PATH_H
 #pragma once
 
-#include "String.h"
+#include "BasicString.h"
 
 namespace CTF::FileSystem {
 

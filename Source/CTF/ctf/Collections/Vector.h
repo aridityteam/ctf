@@ -22,12 +22,13 @@
 #define VECTOR_H
 #pragma once
 
+#include <cstring>
 #include <utility>
 #include <stdexcept>
 
 namespace CTF::Collections {
 
-    template<typename T>
+    template <typename T>
     class Vector {
     public:
         using Iterator = T*;

@@ -25,7 +25,7 @@
 #include "KeyValues.h"
 #include "KeyValuesType.h"
 #include "KeyValuesValue.h"
-#include "String.h"
+#include "BasicString.h"
 #include <memory>
 
 namespace CTF::KV {

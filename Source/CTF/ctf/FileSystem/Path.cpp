@@ -31,13 +31,13 @@ namespace CTF::FileSystem {
         if (!base) base = "";
         if (!relative) relative = "";
 
-        size_t len_base = Q_strlen(base);
-        size_t len_rel = Q_strlen(relative);
+        size_t len_base = A_strlen(base);
+        size_t len_rel = A_strlen(relative);
 
         char* result = (char*)malloc(len_base + len_rel + 2);
         if (!result) return NULL;
 
-        Q_strcpy(result, base);
+        A_strcpy(result, base);
 
         if (len_base > 0 && result[len_base - 1] != PATH_SEP) {
             result[len_base] = PATH_SEP;
@@ -45,10 +45,10 @@ namespace CTF::FileSystem {
         }
 
         if (len_rel > 0 && relative[0] == PATH_SEP) {
-            Q_strcat(result, relative + 1);
+            A_strcat(result, relative + 1);
         }
         else {
-            Q_strcat(result, relative);
+            A_strcat(result, relative);
         }
 
         return result;

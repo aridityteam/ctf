@@ -22,6 +22,13 @@
 #include "FileStream.h"
 #include <cstdio>
 
+#ifdef _WIN32
+#   ifdef fscanf
+#       undef fscanf
+#   endif // fscanf
+#   define fscanf fscanf_s
+#endif // _WIN32
+
 namespace CTF {
 
     size_t FileStream::read(void* buffer, size_t size) {

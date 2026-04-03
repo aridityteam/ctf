@@ -23,7 +23,7 @@
 #pragma once
 
 namespace CTF::Json {
-	class JsonAllocator {
+	class CTF_API JsonAllocator {
 	public:
 		JsonAllocator(int size);
 		~JsonAllocator();
