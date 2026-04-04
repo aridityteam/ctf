@@ -22,8 +22,6 @@
 #define ALGORITHM_H
 #pragma once
 
-
-
 namespace CTF {
 
 	template <typename T>
