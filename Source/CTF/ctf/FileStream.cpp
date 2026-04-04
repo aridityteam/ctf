@@ -117,7 +117,7 @@ namespace CTF {
             return *this;
         }
 
-        if (fscanf(fp_, "%511s", buffer) == 1) {
+        if (fscanf(fp_, "%s", buffer) == 1) {
             out = buffer;
             state_ = StreamState::Good;
         } else {
