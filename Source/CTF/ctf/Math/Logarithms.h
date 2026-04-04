@@ -18,65 +18,60 @@
  * along with Cereon Template Framework. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MATH_TRIGONOMETRY_H
-#define MATH_TRIGONOMETRY_H
+#ifndef MATH_LOGARITHMS_H
+#define MATH_LOGARITHMS_H
 #pragma once
 
 #include <concepts>
 
 namespace CTF::Math {
-	template <std::floating_point T>
-	CTF_CONSTEXPR T Sin(T x) {
-		const T pi = std::numbers::pi_v<T>;
-		const T twoPi = T(2) * pi;
-
-		x = std::fmod(x, twoPi);
-
-		if (x > pi)
-			x -= twoPi;
-		else if (x < -pi)
-			x += twoPi;
-
-		if (x > pi / 2)
-			x = pi - x;
-		else if (x < -pi / 2)
-			x = -pi - x;
-
-		T term = x;
-		T sum = x;
-		T sq = x * x;
-
-		for (int i = 1; i <= 20; i++) {
-			term *= -sq / ((2 * i) * (2 * i + 1));
-			sum += term;
-		}
-
-		return sum;
-	}
+	CTF_CONSTEXPR double Log2 = 0.693147180559945309417;
 
 	template <std::floating_point T>
-	CTF_CONSTEXPR T Cos(T x) {
-		const T pi = std::numbers::pi_v<T>;
-		while (x < 0) x += 2 * pi;
-		x = std::fmod(x, T(2) * T(pi));
+	CTF_CONSTEXPR T Exp(T x) {
+		int k = static_cast<int>(x / Log2);
+		T r = x - k * Log2;
 
 		T term = 1;
 		T sum = 1;
 
-		for (int i = 1; i <= 20; i++) {
-			term *= -x * x / ((2 * i) * (2 * i - 1));
+		for (int n = 1; n < 30; ++n) {
+			term *= r / n;
 			sum += term;
-
-			if (std::abs(term) < std::numeric_limits<T>::epsilon()) break;
+			if (std::abs(term) < 1e-15) break;
 		}
 
-		return sum;
+		return std::ldexp(sum, k);
 	}
 
 	template <std::floating_point T>
-	CTF_CONSTEXPR T Tan(T x) {
-		return Sin(x) / Cos(x);
+	CTF_CONSTEXPR T Log(T x) {
+		int k;
+		T m = std::frexp(x, &k); // x = m * 2^k, m in [0.5, 1)
+
+		if (m < T(0.70710678118)) { // ~1/sqrt(2)
+			m *= 2;
+			k -= 1;
+		}
+
+		T y = (m - 1) / (m + 1);
+		T y2 = y * y;
+
+		T sum = 0;
+		T term = y;
+
+		for (int i = 1; i < 50; i += 2) {
+			sum += term / i;
+			term *= y2;
+		}
+
+		return 2 * sum + k * Log2;
+	}
+
+	template <typename T>
+	CTF_CONSTEXPR T Log(T x, T b) {
+		return Log(x) / Log(b);
 	}
 }
 
-#endif // !MATH_TRIGONOMETRY_H
+#endif // !MATH_LOGARITHMS_H

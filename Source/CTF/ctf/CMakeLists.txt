@@ -49,6 +49,7 @@ set(SOURCES
 	# mathematics
 	#"Math/Trigonometry.cpp"
 	"Math/Trigonometry.h"
+	"Math/Logarithms.h"
 
 	# string
 	#"String.inl"
