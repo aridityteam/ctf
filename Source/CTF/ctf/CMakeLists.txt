@@ -47,9 +47,10 @@ set(SOURCES
 	"Logging/LogListener.h"
 
 	# mathematics
-	#"Math/Trigonometry.cpp"
-	"Math/Trigonometry.h"
 	"Math/Logarithms.h"
+	"Math/Power.h"
+	"Math/Rounding.h"
+	"Math/Trigonometry.h"
 
 	# string
 	#"String.inl"

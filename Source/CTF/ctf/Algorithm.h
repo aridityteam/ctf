@@ -25,6 +25,9 @@
 namespace CTF {
 
 	template <typename T>
+	CTF_API CTF_CONSTEXPR T Abs(T x);
+
+	template <typename T>
 	CTF_API CTF_CONSTEXPR T Max(T a, T b);
 
 	template <typename T>

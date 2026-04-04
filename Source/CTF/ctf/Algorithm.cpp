@@ -23,6 +23,11 @@
 
 namespace CTF {
 	template <typename T>
+	CTF_CONSTEXPR T Abs(T x) {
+		return (x < 0) ? -x : x;
+	}
+
+	template <typename T>
 	CTF_CONSTEXPR T Min(T a, T b) {
 		return b < a ? b : a;
 	}
