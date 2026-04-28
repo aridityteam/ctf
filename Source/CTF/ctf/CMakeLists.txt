@@ -113,6 +113,8 @@ set(SOURCES
 	"PipeStream.h"
 
 	# memory management
+	"LinearArena.cpp"
+	"LinearArena.h"
 	"Memory.cpp"
 	"Memory.h"
 	"RefCounted.cpp"
