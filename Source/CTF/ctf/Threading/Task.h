@@ -7,6 +7,7 @@
 #define TASK_H
 #pragma once
 
+#include "CancellationToken.h"
 #include "Thread.h"
 #include "Mutex.h"
 #include <functional>
@@ -14,67 +15,151 @@
 
 namespace CTF::Threading {
 
-	template <typename T>
-	class Task {
-	public:
-		explicit Task(std::function<T()> func) : done_(false) {
-			thread_ = Thread([this, func]() {
-				result_ = func();
-			});
-		}
+    template<typename T>
+    class Task
+    {
+    public:
+        explicit Task(
+            std::function<T( CancellationToken )> func,
+            CancellationToken token = {} )
+            : cancellationToken_( std::move( token ) )
+        {
+            thread_ = Thread( [ this, func ]()
+                              {
+                                  try
+                                  {
+                                      cancellationToken_.ThrowIfCancellationRequested();
 
-		~Task() {
-			if (thread_.joinable()) thread_.join();
-		}
+                                      result_ = func( cancellationToken_ );
 
-		T get() {
-			if (!done_) {
-				thread_.join();
-				done_ = true;
-			}
-			return result_;
-		}
+                                      canceled_ = cancellationToken_.IsCancellationRequested();
+                                  }
+                                  catch ( ... )
+                                  {
+                                      exception_ = std::current_exception();
+                                  }
 
-	private:
-		Thread thread_;
-		T result_{};
-		bool done_;
-		mutable Mutex mutex_;
-	};
+                                  done_ = true;
+                              } );
+        }
 
-	template <>
-	class Task<void> {
-	public:
-		explicit Task(std::function<void()> func) : done_(false) {
-			thread_ = Thread([this, func]() {
-				func();
-			});
-		}
+        ~Task()
+        {
+            if ( thread_.joinable() )
+                thread_.join();
+        }
 
-		~Task() {
-			if (thread_.joinable()) thread_.join();
-		}
+        T get()
+        {
+            if ( thread_.joinable() )
+                thread_.join();
 
-		void get() {
-			if (!done_) {
-				thread_.join();
-				done_ = true;
-			}
-		}
+            done_ = true;
 
-	private:
-		Thread thread_;
-		bool done_;
-		mutable Mutex mutex_;
-	};
+            if ( exception_ )
+                std::rethrow_exception( exception_ );
+
+            return result_;
+        }
+
+        bool IsCompleted() const
+        {
+            return done_;
+        }
+
+        bool IsCanceled() const
+        {
+            return canceled_;
+        }
+
+    private:
+        Thread thread_;
+
+        CancellationToken cancellationToken_;
+
+        T result_ {};
+
+        std::atomic<bool> done_ { false };
+        std::atomic<bool> canceled_ { false };
+
+        std::exception_ptr exception_;
+    };
+
+    template<>
+    class Task<void>
+    {
+    public:
+        explicit Task(
+            std::function<void( CancellationToken )> func,
+            CancellationToken token = {} )
+            : cancellationToken_( std::move( token ) )
+        {
+            thread_ = Thread( [ this, func ]()
+                              {
+                                  try
+                                  {
+                                      cancellationToken_.ThrowIfCancellationRequested();
+
+                                      func( cancellationToken_ );
+
+                                      canceled_ = cancellationToken_.IsCancellationRequested();
+                                  }
+                                  catch ( ... )
+                                  {
+                                      exception_ = std::current_exception();
+                                  }
+
+                                  done_ = true;
+                              } );
+        }
+
+        ~Task()
+        {
+            if ( thread_.joinable() )
+                thread_.join();
+        }
+
+        void get()
+        {
+            if ( thread_.joinable() )
+                thread_.join();
+
+            done_ = true;
+
+            if ( exception_ )
+                std::rethrow_exception( exception_ );
+        }
+
+        bool IsCompleted() const
+        {
+            return done_;
+        }
+
+        bool IsCanceled() const
+        {
+            return canceled_;
+        }
+
+    private:
+        Thread thread_;
+
+        CancellationToken cancellationToken_;
+
+        std::atomic<bool> done_ { false };
+        std::atomic<bool> canceled_ { false };
+
+        std::exception_ptr exception_;
+    };
 }
 
-namespace CTF::Threading::Internal {
-	template <typename Func>
-	auto make_task_async(Func&& func) {
-		using result_t = decltype(func());
-		return Task<result_t>(std::forward<Func>(func));
-	}
+namespace CTF::Threading::Internal
+{
+    template <typename Func>
+    auto make_task_async( Func &&func, CancellationToken token = {} )
+    {
+        using result_t = decltype( func( token ) );
+        return Task<result_t>( std::forward<Func>( func ), token );
+    }
 }
 
 #define async(func) CTF::Threading::make_task_async([&]() { return func; })

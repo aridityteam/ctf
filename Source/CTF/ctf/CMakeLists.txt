@@ -51,6 +51,8 @@ set(SOURCES
 	"BasicString.h"
 
 	# threading
+	"Threading/CancellationToken.cpp"
+	"Threading/CancellationToken.h"
 	#"Threading/Thread.cpp"
 	"Threading/Thread.h"
 	#"Threading/Mutex.cpp"
