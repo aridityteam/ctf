@@ -22,6 +22,7 @@
 #define TASK_H
 #pragma once
 
+#include <CTF.h>
 #include "CancellationToken.h"
 #include "Thread.h"
 #include "Mutex.h"

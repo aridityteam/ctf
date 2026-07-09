@@ -22,6 +22,7 @@
 #define CTF_CANCELLATIONTOKEN_H
 #pragma once
 
+#include <CTF.h>
 #include <atomic>
 #include <memory>
 #include <exception>
