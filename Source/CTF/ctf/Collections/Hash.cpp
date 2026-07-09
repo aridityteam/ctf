@@ -25,7 +25,7 @@ namespace CTF::Collections {
     template <typename T> int Hash<T>::operator()(const T &key) const {
         const unsigned char *data = reinterpret_cast<const unsigned char *>(&key);
         int Hash = 0;
-        for (int i = 0; i < sizeof(T); ++i)
+        for (size_t i = 0; i < sizeof(T); ++i)
             Hash = Hash * 131 + data[i];
         return Hash;
     }
@@ -34,7 +34,7 @@ namespace CTF::Collections {
         int Hash = 5381;
         const char *str = s.CStr();
         size_t len = s.Length();
-        for (int i = 0; i < len; ++i)
+        for (size_t i = 0; i < len; ++i)
             Hash = ((Hash << 5) + Hash) + static_cast<unsigned char>(str[i]);
         return Hash;
     }

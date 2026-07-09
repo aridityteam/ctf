@@ -22,6 +22,7 @@
 #define MATH_LOGARITHMS_H
 #pragma once
 
+#include <CTF.h>
 #include <concepts>
 
 namespace CTF::Math {
