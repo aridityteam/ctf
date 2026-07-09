@@ -46,6 +46,12 @@ set(SOURCES
 	"Logging/LogListener.cpp"
 	"Logging/LogListener.h"
 
+	# mathematics
+	"Math/Logarithms.h"
+	"Math/Power.h"
+	"Math/Rounding.h"
+	"Math/Trigonometry.h"
+
 	# string
 	#"String.inl"
 	"BasicString.h"
@@ -107,6 +113,8 @@ set(SOURCES
 	"PipeStream.h"
 
 	# memory management
+	"LinearArena.cpp"
+	"LinearArena.h"
 	"Memory.cpp"
 	"Memory.h"
 	"RefCounted.cpp"

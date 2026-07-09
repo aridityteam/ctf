@@ -36,7 +36,7 @@ namespace CTF {
         Error
     };
 
-    class Stream {
+    class CTF_API Stream {
     public:
         virtual ~Stream() = default;
 

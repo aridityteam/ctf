@@ -62,33 +62,4 @@ namespace CTF {
         std::free(ptr);
 #endif
     }
-
-    LinearArena::LinearArena(size_t size)
-    {
-        m_buffer = (char*)Memory::Alloc(size);
-        m_capacity = size;
-        m_offset = 0;
-    }
-
-    LinearArena::~LinearArena()
-    {
-        Memory::Free(m_buffer);
-    }
-
-    void* LinearArena::Alloc(size_t size)
-    {
-        size_t alignedSize = (size + 7) & ~7ULL;
-
-        if (m_offset + alignedSize > m_capacity)
-            return nullptr;
-
-        void* ptr = m_buffer + m_offset;
-        m_offset += alignedSize;
-        return ptr;
-    }
-
-    void LinearArena::Reset()
-    {
-        m_offset = 0;
-    }
 }

@@ -33,7 +33,12 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(MSVC)
-	add_compile_options(/W4 /clang:-Wno-character-conversion /clang:-Wno-error=character-conversion)
+	add_compile_options(/W4)
+
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		add_compile_options(/clang:-Wno-character-conversion /clang:-Wno-error=character-conversion)
+	else()
+	endif()
 else()
 	set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 	set(CMAKE_HAVE_THREADS_LIBRARY 1)
