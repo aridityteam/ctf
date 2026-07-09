@@ -23,6 +23,7 @@
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       },
+      "generator": "Visual Studio 18 2026",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
         "CMAKE_CXX_COMPILER": "cl"

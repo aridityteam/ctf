@@ -22,7 +22,6 @@
 #define FILESTREAM_H
 #pragma once
 
-
 #include "Stream.h"
 #include "stdio.h"
 #include <stdexcept>

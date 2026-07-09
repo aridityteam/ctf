@@ -31,7 +31,7 @@ namespace CTF {
  * @brief Just a simple basic string class.
  */
 template <typename T>
-class BasicString {
+class CTF_API BasicString {
 public:
     /**
      * @brief Initializes an empty string.
