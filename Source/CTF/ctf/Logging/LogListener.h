@@ -22,6 +22,8 @@
 #define CTF_ILOGLISTENER_H
 #pragma once
 
+#include "CTF.h"
+
 namespace CTF::Logging {
     enum class LogLevel;
     class CTF_API ILogListener {

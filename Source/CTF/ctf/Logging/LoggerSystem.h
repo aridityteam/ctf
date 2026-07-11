@@ -22,6 +22,7 @@
 #define CTF_LOGGERSYSTEM_H
 #pragma once
 
+#include "CTF.h"
 #include "LogListener.h"
 #include "Threading/Mutex.h"
 #include "Collections/Vector.h"

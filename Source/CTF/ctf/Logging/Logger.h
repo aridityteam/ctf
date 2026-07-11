@@ -23,6 +23,7 @@
 #pragma once
 
 #include <cstdarg>
+#include <CTF.h>
 
 namespace CTF::Logging {
 
