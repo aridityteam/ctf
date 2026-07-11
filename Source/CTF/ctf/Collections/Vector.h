@@ -62,6 +62,8 @@ namespace CTF::Collections {
         Iterator erase(Iterator pos);
         Iterator erase(Iterator first, Iterator last);
 
+	const T* data() const noexcept { return data_; }
+
     private:
         T* data_;
         int size_;
