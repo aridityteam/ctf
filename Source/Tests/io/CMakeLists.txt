@@ -9,7 +9,7 @@ endif()
 set(CTF_INC_DIRS ${SRC_DIR}/CTF)
 
 set(SOURCES
-	"main.cpp"
+	${COMMON_SOURCES}
 	"ostringstreamtest.cpp"
 	"pipestreamtest.cpp"
 )
