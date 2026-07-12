@@ -55,6 +55,8 @@ endif()
 
 # global options start here
 
+option(CTF_BUILD_SHARED "Builds the Cereon Template Framework as a shared library" ON)
+
 # end global options
 
 if(WIN32)
