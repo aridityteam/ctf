@@ -26,8 +26,10 @@ namespace CTF::FileSystem {
     File::File(Path& path) :
         path_(path) {}
 
-    FileStream *File::open(const char* mode) {
-        if (!exists()) throw std::runtime_error("Failed to open file");
-        return FileStream::open(path_.str().CStr(), mode).get();
+    std::unique_ptr<FileStream> File::open(const char* mode) {
+        if (!exists())
+		throw std::runtime_error("Failed to open file");
+
+        return FileStream::open(path_.str().CStr(), mode);
     }
 }

@@ -24,7 +24,7 @@
 
 #include "FileStream.h"
 #include "Path.h"
-
+#include <memory>
 
 namespace CTF::FileSystem {
 
@@ -35,7 +35,7 @@ namespace CTF::FileSystem {
 
         bool exists() { return path_.file_exists(); }
         const String& get_name() { return path_.get_name(); }
-        CTF::FileStream *open(const char *mode);
+	std::unique_ptr<CTF::FileStream> open(const char *mode);
 
     private:
         Path path_;
