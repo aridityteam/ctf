@@ -171,6 +171,18 @@ else()
 	)
 endif()
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    VERSION   "${PROJECT_VERSION}"
+    SOVERSION "${PROJECT_VERSION_MAJOR}"
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    C_VISIBILITY_PRESET   hidden
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
+)
+
 target_precompile_headers(${PROJECT_NAME} PRIVATE CTF.h)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+include("${CMAKE_SOURCE_DIR}/cmake/CTFInstall.cmake")
+

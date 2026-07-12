@@ -1,0 +1,20 @@
+@PACKAGE_INIT@
+
+##############################################################################
+# CTFConfig.cmake
+#
+# Copyright (c) 2026 The Aridity Team, all rights reserved.
+#
+# Provides the imported target CTF::CTF for use by downstream projects.
+#
+##############################################################################
+
+include(CMakeFindDependencyMacro)
+
+# Re-find any public dependencies that CTF exposes in its interface here.
+# Example: find_dependency(SomeDep REQUIRED)
+
+# Include the exported targets (generated at install time).
+include("${CMAKE_CURRENT_LIST_DIR}/CTFTargets.cmake")
+
+check_required_components(CTF)
