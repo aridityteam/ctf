@@ -22,13 +22,6 @@
 #include "FileStream.h"
 #include <cstdio>
 
-#ifdef _WIN32
-#   ifdef fscanf
-#       undef fscanf
-#   endif // fscanf
-#   define fscanf fscanf_s
-#endif // _WIN32
-
 namespace CTF {
 
     size_t FileStream::read(void* buffer, size_t size) {
@@ -117,7 +110,13 @@ namespace CTF {
             return *this;
         }
 
-        if (fscanf(fp_, "%511s", buffer, (unsigned)sizeof(buffer)) == 1) {
+        if (
+#ifdef _WIN32
+			fscanf_s(fp_, "%511s", buffer, (unsigned)sizeof(buffer)) == 1
+#else
+			fscanf(fp_, "%511s", buffer) == 1
+#endif // _WIN32
+			) {
             out = buffer;
             state_ = StreamState::Good;
         } else {

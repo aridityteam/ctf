@@ -6,7 +6,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wno-return-local-addr)
 endif()
 
-set(CTF_INC_DIRS ${SRC_DIR}/CTF/ctf)
+set(CTF_INC_DIRS ${SRC_DIR}/CTF)
 
 set(SOURCES
 	"main.cpp"

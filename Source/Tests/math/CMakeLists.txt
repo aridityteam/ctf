@@ -1,4 +1,4 @@
-project(testIO)
+project(testMath)
 
 if(MSVC)
     add_compile_options(/wd4172)
@@ -6,12 +6,11 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wno-return-local-addr)
 endif()
 
-set(CTF_INC_DIRS ${SRC_DIR}/CTF/ctf)
+set(CTF_INC_DIRS ${SRC_DIR}/CTF)
 
 set(SOURCES
 	"main.cpp"
-	"ostringstreamtest.cpp"
-	"pipestreamtest.cpp"
+	"trigonometrytest.cpp"
 )
 
 if(MSVC)
@@ -51,6 +50,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 add_test(
-	NAME CTF_IO_Test
-	COMMAND testIO
+	NAME CTF_Math_Test
+	COMMAND testMath
 )
