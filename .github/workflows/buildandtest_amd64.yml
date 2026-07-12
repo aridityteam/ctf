@@ -40,7 +40,7 @@ jobs:
 
       - name: Setup MSVC
         if: matrix.os == 'windows-latest' && matrix.preset == 'windows-msvc'
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: TheMrMilchmann/setup-msvc-dev@v4
 
       - name: Setup Clang
         if: contains(matrix.preset, 'clang')
