@@ -91,7 +91,14 @@ namespace CTF
 		{
 		}
 
+#ifdef _WIN32
+#	pragma warning ( push )
+#	pragma warning ( disable : 4251 )
+#endif // _WIN32
 		std::shared_ptr<Internal::CancellationState> m_State;
+#ifdef _WIN32
+#	pragma warning ( pop )
+#endif // _WIN32
 	};
 
 	/**
@@ -123,7 +130,14 @@ namespace CTF
 		bool IsCancellationRequested() const noexcept;
 
 	private:
+#ifdef _WIN32
+#	pragma warning ( push )
+#	pragma warning ( disable : 4251 )
+#endif // _WIN32
 		std::shared_ptr<Internal::CancellationState> m_State;
+#ifdef _WIN32
+#	pragma warning ( pop )
+#endif // _WIN32	
 	};
 }
 
