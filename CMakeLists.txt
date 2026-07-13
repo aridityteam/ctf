@@ -35,7 +35,14 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(MSVC)
-	add_compile_options(/W4)
+	add_compile_options(
+		$<$<COMPILE_LANGUAGE:C,CXX>:/W4>
+	)
+	
+	add_compile_definitions(
+		$<$<COMPILE_LANGUAGE:C,CXX>:COMPILER_MSVC=1>
+		$<$<COMPILE_LANGUAGE:C,CXX>:MSVC=1>
+	)
 
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 		add_compile_options(/clang:-Wno-character-conversion /clang:-Wno-error=character-conversion)
@@ -55,18 +62,72 @@ else()
 	endif()
 endif()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	add_compile_definitions(COMPILER_GCC=1)
+	add_compile_definitions(GNUC=1)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	add_compile_definitions(COMPILER_CLANG=1)
+	add_compile_definitions(CLANG=1)
+endif()
+
+set(PLATFORM_64BITS 0)
+set(PLATFORM_32BITS 0)
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	add_compile_definitions(__x86_64__=1)
+	add_compile_definitions(PLATFORM_64BITS=1)
+	set(PLATFORM_64BITS 1)
+	set(PLATFORM_32BITS 0)
+
+	if (WIN32)
+		add_compile_definitions(WIN64=1)
+		add_compile_definitions(_WIN64=1)
+
+		if (MSVC)
+			add_compile_definitions($<$<COMPILE_LANGUAGE:C,CXX>:COMPILER_MSVC64=1>)
+
+			# C4267: 'var' : conversion from 'size_t' to 'type', possible loss of data
+			#add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:/wd4267>)
+		endif()
+	endif()
+else()
+	set(PLATFORM_64BITS 0)
+	set(PLATFORM_32BITS 1)
+
+	add_compile_definitions(PLATFORM_32BITS=1)
+
+	if (WIN32 and MSVC)
+		add_compile_definitions(COMPILER_MSVC32=1)
+	endif()
+endif()
+
 # global options start here
 
 option(CTF_BUILD_SHARED "Builds the Cereon Template Framework as a shared library" ON)
 
 # end global options
 
+set(IS_WINDOWS 0)
+set(IS_UNIX 0)
+set(IS_POSIX 0)
+set(IS_MACOS 0)
+set(IS_LINUX 0)
+
 if(WIN32)
-    	message(STATUS "Building for Windows")
-elseif(APPLE)
-    	message(STATUS "Building for macOS")
+	set(IS_WINDOWS 1)
+	message(STATUS "Building for Windows")
 elseif(UNIX)
-    	message(STATUS "Building for Linux")
+	set(IS_UNIX 1)
+	set(IS_POSIX 1)
+
+	if (APPLE)
+		set(IS_MACOS 1)
+		message(STATUS "Building for macOS")
+	elseif(LINUX)
+		set(IS_LINUX 1)
+
+		message(STATUS "Building for Linux")
+	endif()
 endif()
 
 include_directories(
