@@ -184,5 +184,5 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE CTF.h)
 
-include("${CMAKE_SOURCE_DIR}/cmake/CTFInstall.cmake")
+include("${ROOT_DIR}/cmake/CTFInstall.cmake")
 

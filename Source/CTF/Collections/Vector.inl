@@ -26,9 +26,19 @@ CTF::Collections::Vector<T>::Vector()
     : data_(nullptr), size_(0), capacity_(0) {}
 
 template <typename T>
-CTF::Collections::Vector<T>::Vector(int n)
+CTF::Collections::Vector<T>::Vector(size_t n)
     : data_(nullptr), size_(0), capacity_(0) {
   resize(n);
+}
+
+template <typename T>
+CTF::Collections::Vector<T>::Vector(Vector&& other) noexcept
+	: data_(other.data_)
+	, size_(other.size_)
+	, capacity_(other.capacity_) {
+	other.data_ = nullptr;
+	other.size_ = 0;
+	other.capacity_ = 0;
 }
 
 template <typename T> CTF::Collections::Vector<T>::Vector::~Vector() { clear(); }
@@ -43,30 +53,61 @@ template <typename T> void CTF::Collections::Vector<T>::push_back(T &&value) {
 }
 
 template <typename T> void CTF::Collections::Vector<T>::pop_back() {
-  if (size_ > 0)
-    --size_;
+	if (size_ == 0)
+	  return;
+	
+	data[size_ - 1].~T();
+	--size_;
 }
 
-template <typename T> T &CTF::Collections::Vector<T>::operator[](int index) {
+template <typename T> T &CTF::Collections::Vector<T>::operator[](size_t index) {
   return data_[index];
 }
 
 template <typename T>
-const T &CTF::Collections::Vector<T>::operator[](int index) const {
+const T &CTF::Collections::Vector<T>::operator[](size_t index) const {
   return data_[index];
 }
 
-template <typename T> T &CTF::Collections::Vector<T>::at(int index) {
+template <typename T> T &CTF::Collections::Vector<T>::at(size_t index) {
   if (index < 0 || index >= size_)
     throw std::out_of_range("Vector::at out of range");
   return data_[index];
 }
 
-template <typename T> int CTF::Collections::Vector<T>::size() const {
+template <typename T> T &CTF::Collections::Vector<T>::front() {
+	if (size_ == 0)
+		throw std::out_of_range("Vector::front: vector is empty.");
+
+	return data_[0];
+}
+
+template <typename T> const T &CTF::Collections::Vector<T>::front() const {
+	if (size_ == 0)
+		throw std::out_of_range("Vector::front: vector is empty.");
+
+	return data_[0];
+}
+
+template <typename T> T &CTF::Collections::Vector<T>::back() {
+	if (size_ == 0)
+		throw std::out_of_range("Vector::back: vector is empty.");
+
+	return data_[size_ - 1];
+}
+
+template <typename T> const T &CTF::Collections::Vector<T>::back() const {
+	if (size_ == 0)
+		throw std::out_of_range("Vector::back: vector is empty.");
+
+	return data_[size_ - 1];
+}
+
+template <typename T> size_t CTF::Collections::Vector<T>::size() const {
   return size_;
 }
 
-template <typename T> int CTF::Collections::Vector<T>::capacity() const {
+template <typename T> size_t CTF::Collections::Vector<T>::capacity() const {
   return capacity_;
 }
 
@@ -100,7 +141,7 @@ CTF::Collections::Vector<T>::end() const {
 }
 
 template <typename T> void CTF::Collections::Vector<T>::clear() {
-  for (int i = 0; i < size_; ++i)
+  for (size_t i = 0; i < size_; ++i)
     data_[i].~T();
   ::operator delete[](data_);
   data_ = nullptr;
@@ -122,23 +163,25 @@ CTF::Collections::Vector<T>::erase(Iterator pos) {
 template <typename T>
 CTF::Collections::Vector<T>::Iterator
 CTF::Collections::Vector<T>::erase(Iterator first, Iterator last) {
-  int n = static_cast<int>(last - first);
+  size_t n = static_cast<size_t>(last - first);
   for (T *it = first; it < data_ + size_ - n; ++it) {
     *it = std::move(*(it + n));
   }
+  data_[size_ - n].~T();
   size_ -= n;
   return first;
 }
 
 template <typename T>
-void CTF::Collections::Vector<T>::resize(int new_capacity) {
+void CTF::Collections::Vector<T>::resize(size_t new_capacity) {
   T *new_data = static_cast<T *>(::operator new[](new_capacity * sizeof(T)));
-  for (int i = 0; i < size_; ++i) {
+  for (size_t i = 0; i < size_; ++i) {
     new (new_data + i) T(std::move(data_[i]));
     data_[i].~T();
   }
   ::operator delete[](data_);
   data_ = new_data;
+  size_ = std::min(size_, new_capacity);
   capacity_ = new_capacity;
 }
 

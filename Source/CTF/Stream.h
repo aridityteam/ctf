@@ -22,8 +22,10 @@
 #define STREAM_H
 #pragma once
 
-
 #include "BasicString.h"
+#include <charconv>
+#include <system_error>
+#include <type_traits>
 
 namespace CTF {
 
@@ -69,6 +71,37 @@ namespace CTF {
 
         virtual Stream& operator<<(StreamManipulator m) {
             return m(*this);
+        }
+
+        template<typename T>
+        requires (std::is_integral_v<T> && !std::is_same_v<T, char>)
+        Stream& operator<<(T value) {
+            char buffer[32];
+            auto [ptr, ec] = std::to_chars(buffer, buffer + sizeof(buffer), value);
+
+            if (ec == std::errc())
+                write(buffer, ptr - buffer);
+
+            return *this;
+        }
+
+        Stream& operator<<(bool value) {
+            return value ? writeString("true")
+                         : writeString("false");
+        }
+
+        template<typename T>
+        requires std::is_floating_point_v<T>
+        Stream& operator<<(T value) {
+            char buffer[64];
+            auto [ptr, ec] = std::to_chars(buffer,
+                                       buffer + sizeof(buffer),
+                                       value);
+
+            if (ec == std::errc())
+                write(buffer, ptr - buffer);
+
+            return *this;
         }
 
         virtual Stream& operator>>(CTF::String& out) {

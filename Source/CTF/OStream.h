@@ -58,6 +58,12 @@ namespace CTF {
             return *this;
         }
 
+	template<typename T>
+	OStream& operator<<(const T& value) {
+    		s_.operator<<(value);
+    		return *this;
+	}
+
         OStream& operator<<(Manipulator m) {
             return m(*this);
         }

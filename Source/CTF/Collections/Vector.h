@@ -22,6 +22,7 @@
 #define VECTOR_H
 #pragma once
 
+#include <algorithm>
 #include <cstring>
 #include <utility>
 #include <stdexcept>
@@ -35,19 +36,32 @@ namespace CTF::Collections {
         using ConstIterator = const T*;
 
         Vector();
-        explicit Vector(int n);
+        explicit Vector(size_t n);
+
+	Vector(const Vector&) = delete;
+	Vector& operator=(const Vector&) = delete;
+
+	Vector(Vector&&) noexcept;
+	Vector& operator=(Vector&&) = default;
+
         ~Vector();
 
         void push_back(const T& value);
         void push_back(T&& value);
         void pop_back();
 
-        T& operator[](int index);
-        const T& operator[](int index) const;
-        T& at(int index);
+        T& operator[](size_t index);
+        const T& operator[](size_t index) const;
+        T& at(size_t index);
 
-        int size() const;
-        int capacity() const;
+	T& front();
+	const T& front() const;
+
+	T& back();
+	const T& back() const;
+
+        size_t size() const;
+        size_t capacity() const;
 
         void swap(Vector<T>& other) noexcept;
 
@@ -57,7 +71,7 @@ namespace CTF::Collections {
         ConstIterator end() const;
 
         void clear();
-        void resize(int new_capacity);
+        void resize(size_t new_capacity);
 
         Iterator erase(Iterator pos);
         Iterator erase(Iterator first, Iterator last);
@@ -66,8 +80,8 @@ namespace CTF::Collections {
 
     private:
         T* data_;
-        int size_;
-        int capacity_;
+        size_t size_;
+        size_t capacity_;
 
         template<typename U>
         void insert_impl(U&& value);

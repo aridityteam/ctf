@@ -23,6 +23,8 @@
 #pragma once
 
 #include "CTF.h"
+#include <memory>
+#include <stdexcept>
 #include <string>
 
 namespace CTF {
@@ -30,26 +32,41 @@ namespace CTF {
 /**
  * @brief Just a simple basic string class.
  */
-template <typename T>
+template <
+	typename CharT,
+	typename Traits = std::char_traits<CharT>,
+	typename Allocator = std::allocator<CharT>>
 class CTF_API BasicString {
+public:
+	using ValueType = CharT;
+	using TraitsType = Traits;
+	using AllocatorType = Allocator;
+	using AllocTraits = std::allocator_traits<Allocator>;
+	using SizeType = typename AllocTraits::size_type;
+	using Pointer = typename AllocTraits::pointer;
+	using ConstPointer = typename AllocTraits::const_pointer;
+
 public:
     /**
      * @brief Initializes an empty string.
      */
-    BasicString() {
-        buffer_ = nullptr;
-        size_ = 0;
-        capacity_ = 0;
-    }
+    explicit BasicString(const Allocator& alloc = Allocator())
+	: size_(0)
+	, capacity_(0)
+	, allocator_(alloc) {	
+		buffer_ = AllocTraits::allocate(allocator_, 1);
+		buffer_[0] = '\0';
+	}
 
     /**
      * @brief Initializes a string from a character buffer.
      * @param buf The character buffer to initialize the string with.
      */
-    BasicString(T c) noexcept {
-        size_ = 1;
-        capacity_ = size_;
-        buffer_ = new T[2];
+    BasicString(CharT c, const Allocator& alloc = Allocator()) noexcept
+	: size_(1)
+	, capacity_(size_)
+	, allocator_(alloc) {
+        buffer_ = AllocTraits::allocate(allocator_, size_ + 1);
         buffer_[0] = c;
         buffer_[1] = '\0';
     }
@@ -58,7 +75,8 @@ public:
      * @brief Initializes a string from a character buffer.
      * @param buf The character buffer to initialize the string with.
      */
-    BasicString(const T* buf) noexcept {
+    BasicString(ConstPointer buf, const Allocator& alloc = Allocator()) noexcept
+	    : allocator_(alloc) {
         if (!buf) {
             buffer_ = nullptr;
             size_ = 0;
@@ -66,17 +84,19 @@ public:
             return;
         }
 
-        size_ = std::char_traits<T>::length(buf);
+        size_ = Traits::length(buf);
         capacity_ = size_;
-        buffer_ = new T[size_ + 1];
-        std::char_traits<T>::copy(buffer_, buf, size_ + 1);
+        buffer_ = AllocTraits::allocate(allocator_, size_ + 1);
+        Traits::copy(buffer_, buf, size_ + 1);
     }
 
     /**
      * @brief Initializes a string from another string.
      * @param other The string to copy.
      */
-    BasicString(const BasicString& other) noexcept {
+    BasicString(const BasicString& other) noexcept
+	    : allocator_(AllocTraits::select_on_container_copy_construction(
+				    other.allocator_)) {
         size_ = other.size_;
         capacity_ = other.capacity_;
 
@@ -87,15 +107,16 @@ public:
             return;
         }
 
-        buffer_ = new T[size_ + 1];
-        std::char_traits<T>::copy(buffer_, other.buffer_, size_ + 1);
+        buffer_ = AllocTraits::allocate(allocator_, size_ + 1);
+        Traits::copy(buffer_, other.buffer_, size_ + 1);
     }
 
     /**
      * @brief Initializes a string from another string.
      * @param other The string to copy.
      */
-    BasicString(BasicString&& other) noexcept {
+    BasicString(BasicString&& other) noexcept
+	    : allocator_(std::move(other.allocator_)) {
         buffer_ = other.buffer_;
         size_ = other.size_;
         capacity_ = other.capacity_;
@@ -108,24 +129,35 @@ public:
      * @brief De-initializes a string.
      */
     ~BasicString() {
-        delete[] buffer_;
+	    if (buffer_) {
+		AllocTraits::deallocate(allocator_, buffer_, capacity_ + 1);
+	    }
     }
 
     /**
      * @brief Appends a string to the another one
      * @param other The string to append.
      */
-    BasicString Append(const BasicString& other) noexcept {
-        size_t newSize = size_ + other.size_;
-        size_t newCapacity = capacity_ == 0 ? 8 : capacity_;
+    BasicString& Append(const BasicString& other) {
+	if (other.size_ > std::numeric_limits<SizeType>::max() - size_)
+		throw std::length_error("BasicString is too large.");
+    
+	SizeType newSize = size_ + other.size_;
+	SizeType newCapacity = capacity_ == 0 ? 8 : capacity_;
         while (newCapacity < newSize) {
-            newCapacity *= 2;
-        }
+        	if (newCapacity > std::numeric_limits<SizeType>::max() / 2)
+			newCapacity = newSize;
+		else
+			newCapacity *= 2;
+	}
 
         Reserve(newCapacity);
 
         if (other.size_ > 0 && other.buffer_) {
-            std::char_traits<T>::copy(buffer_ + size_, other.buffer_, other.size_);
+            if (this == &other)
+		Traits::move(buffer_ + size_, buffer_, size_);
+	    else
+		Traits::copy(buffer_ + size_, other.buffer_, other.size_);
         }
 
         size_ = newSize;
@@ -138,7 +170,7 @@ public:
      * @brief Initializes a string from a character buffer.
      * @param other The character buffer to initialize the string with.
      */
-    BasicString &operator=(const BasicString& other) noexcept {
+    BasicString& operator=(const BasicString& other) noexcept {
         if (this != &other) {
             CleanUp();
 
@@ -149,8 +181,8 @@ public:
 
             size_ = other.size_;
             capacity_ = other.capacity_;
-            buffer_ = new T[size_ + 1];
-            std::char_traits<T>::copy(buffer_, other.buffer_, size_ + 1);
+            buffer_ = AllocTraits::allocate(allocator_, size_ + 1);
+            Traits::copy(buffer_, other.buffer_, size_ + 1);
         }
         return *this;
     }
@@ -159,7 +191,7 @@ public:
      * @brief Initializes a string from a character buffer.
      * @param other The character buffer to initialize the string with.
      */
-    BasicString &operator=(BasicString&& other) noexcept {
+    BasicString& operator=(BasicString&& other) noexcept {
         if (this != &other) {
             CleanUp();
             buffer_ = other.buffer_;
@@ -177,26 +209,17 @@ public:
      * @brief Appends a string to the another one
      * @param other The string to append.
      */
-    BasicString operator+(BasicString& other) {
-        if (this != &other)
-        {
-            delete[] buffer_;
-
-            buffer_ = other.buffer_;
-            size_ = other.size_;
-
-            other.buffer_ = nullptr;
-            other.size_ = 0;
-        }
-
-        return *this;
+    BasicString operator+(const BasicString& other) {
+	BasicString result(*this);
+	result.Append(other);
+	return result;
     }
 
     /**
      * @brief Appends a string to the another one
      * @param other The string to append.
      */
-    BasicString operator+=(const BasicString& other) {
+    BasicString& operator+=(const BasicString& other) {
         return Append(other);
     }
 
@@ -204,9 +227,9 @@ public:
      * @brief Determines whether the current BasicString is equals to the other one.
      * @param other The BasicString to append.
      */
-    bool Equals(const T* other) const {
-        if (std::char_traits<T>::length(other) != size_) return false;
-        return !std::char_traits<T>::compare(buffer_, other, size_);
+    bool Equals(ConstPointer other) const {
+        if (Traits::length(other) != size_) return false;
+        return !Traits::compare(buffer_, other, size_);
     }
 
     /**
@@ -214,8 +237,8 @@ public:
      * @param other The BasicString to append.
      */
     bool Equals(const BasicString& other) const {
-        if (std::char_traits<T>::length(other.buffer_) != size_) return false;
-        return !std::char_traits<T>::compare(buffer_, other.buffer_, size_);
+        if (other.size_ != size_) return false;
+        return !Traits::compare(buffer_, other.buffer_, size_);
     }
 
     /**
@@ -239,26 +262,29 @@ public:
     /**
      * @brief Gets the current BasicString's capacity.
      */
-    size_t Capacity() const {
+    SizeType Capacity() const {
         return capacity_;
     }
 
     /**
      * @brief Reserves a new number of capacity for the current BasicString.
      */
-    void Reserve(size_t newCapacity) {
+    void Reserve(SizeType newCapacity) {
         if (newCapacity <= capacity_)
             return;
 
-        T* newBuffer = new T[newCapacity + 1];
+        Pointer newBuffer = AllocTraits::allocate(allocator_, newCapacity + 1);
 
-        if (buffer_)
-        {
-            std::char_traits<T>::copy(newBuffer, buffer_, size_);
-            delete[] buffer_;
+        if (buffer_) {
+            Traits::copy(newBuffer, buffer_, size_);
+	    AllocTraits::deallocate(
+			    allocator_,
+			    buffer_,
+			    capacity_ + 1
+			);
         }
 
-        newBuffer[size_] = '\0';
+        newBuffer[size_] = CharT();
 
         buffer_ = newBuffer;
         capacity_ = newCapacity;
@@ -268,7 +294,7 @@ public:
      * @brief Determines whether the current BasicString is equals to the other one.
      * @param other The BasicString to append.
      */
-    bool operator==(const T* other) const {
+    bool operator==(ConstPointer other) const {
         return Equals(other);
     }
 
@@ -276,7 +302,7 @@ public:
      * @brief Determines whether the current BasicString is equals to the other one.
      * @param other The BasicString to append.
      */
-    bool operator==(BasicString& other) const {
+    bool operator==(const BasicString& other) const {
         return Equals(other);
     }
 
@@ -284,7 +310,7 @@ public:
      * @brief Determines whether the current BasicString is not equal to the other one.
      * @param other The BasicString to append.
      */
-    bool operator!=(const T* other) const {
+    bool operator!=(ConstPointer other) const {
         return !Equals(other);
     }
 
@@ -292,38 +318,60 @@ public:
      * @brief Determines whether the current BasicString is not equal to the other one.
      * @param other The BasicString to append.
      */
-    bool operator!=(BasicString& other) const {
+    bool operator!=(const BasicString& other) const {
         return !Equals(other);
     }
+
+	/**
+	 * @brief Gets a single character from a specific index.
+	 */
+	CharT At(SizeType index) const {
+		if (index >= size_)
+			throw std::out_of_range(
+				"BasicString::At got an out-of-bounds index."
+			);
+
+		return buffer_[index];
+	}
+
+	/**
+	 * @brief Gets a single character from a specific index.
+	 */
+	CharT& operator [](SizeType index) noexcept { return buffer_[index]; }
+	
+	/**
+	 * @brief Gets a single character from a specific index.
+	 */
+	const CharT& operator [](SizeType index) const noexcept { return buffer_[index]; }
 
     /**
      * @brief Gets the current string length/size.
      */
-    size_t Length() const noexcept { return size_; }
+    SizeType Length() const noexcept { return size_; }
 
     /**
      * @brief Converts the string to a raw string.
      */
-    operator const T* () const noexcept { return buffer_; }
+    operator ConstPointer () const noexcept { return buffer_; }
 
     /**
      * @brief Converts the string to a raw string.
      */
-    const T* CStr() const noexcept { return buffer_; }
+    ConstPointer CStr() const noexcept { return buffer_; }
 
 private:
     /**
      * @brief Releases BasicString resources.
      */
     void CleanUp() {
-        delete[] buffer_;
-        buffer_ = nullptr;
-        size_ = 0;
+	    AllocTraits::deallocate(allocator_, buffer_, capacity_ + 1);
+	    size_ = 0;
     }
 
-    T *buffer_;
-    size_t size_;
-    size_t capacity_;
+    Pointer buffer_;
+    SizeType size_;
+    SizeType capacity_;
+    [[no_unique_address]] Allocator allocator_;
 };
 
 typedef BasicString<char> String;

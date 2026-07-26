@@ -109,9 +109,9 @@ export(EXPORT CTFTargets
 # ---------------------------------------------------------------------------
 
 configure_package_config_file(
-    "${CMAKE_SOURCE_DIR}/cmake/CTFConfig.cmake.in"
-    "${CMAKE_BINARY_DIR}/CTFConfig.cmake"
-    INSTALL_DESTINATION "${CTF_INSTALL_CMAKEDIR}"
+	"${ROOT_DIR}/cmake/CTFConfig.cmake.in"
+	"${CMAKE_BINARY_DIR}/CTFConfig.cmake"
+	INSTALL_DESTINATION "${CTF_INSTALL_CMAKEDIR}"
 )
 
 write_basic_package_version_file(
