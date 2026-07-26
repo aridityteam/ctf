@@ -56,7 +56,7 @@ template <typename T> void CTF::Collections::Vector<T>::pop_back() {
 	if (size_ == 0)
 	  return;
 	
-	data[size_ - 1].~T();
+	data_[size_ - 1].~T();
 	--size_;
 }
 
