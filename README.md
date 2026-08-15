@@ -1,5 +1,10 @@
 # Cereon Template Framework
 
+> [!IMPORTANT]
+> Cereon Template Framework has ceased development, however a full rewrite of the Cereon Template
+> Framework is currently on development. Thanks for contributing and using the Cereon Template
+> Framework for your projects!
+
 Cereon Template Framework is C++ 23 standard template library for The Aridity Team C++ projects to use,
 it is currently used by the work-in-progress Cereon project.
 
